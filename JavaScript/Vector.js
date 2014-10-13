@@ -1,5 +1,5 @@
 function Iterator (vector, idx) {
-  if (! vector instanceof Vector) {
+  if (!vector.isVector) {
     throw new Error('Value passed to Iterator was not a Vector type!');
   }
 
@@ -38,6 +38,16 @@ function Vector (type, size) {
   var objects = [],
       i;
 
+  if (type !== 'string' && type !== 'number') {
+    throw new Error('Incorrect type for new Vector type: ' + type);
+  }
+
+  if (typeof size === 'undefined') {
+    size = 0;
+  } else if (typeof size !== 'number') {
+    throw new Error('Incorrect type for size of new Vector: ' + size);
+  }
+
   // setup initial vector elements
   for (i = 0; i < size; ++i) {
     if (type === 'string') {
@@ -48,6 +58,8 @@ function Vector (type, size) {
   }
 
   return {
+    isVector: true,
+
     push_back: function (val) {
       if (typeof val !== type) {
         throw new Error('Vector#push_back: Type mismatch on type ' + type + ' and value ' + val);
