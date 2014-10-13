@@ -99,32 +99,32 @@ describe('Vector', function () {
 
     it('can\'t access an element that isn\'t there', function () {
       var v = new Vector('number');
-      expect(v.at.bind(v, 0)).to.throw(Error);
-      expect(v.at.bind(v, 1)).to.throw(Error);
-      expect(v.at.bind(v, 2)).to.throw(Error);
-      expect(v.at.bind(v, 20)).to.throw(Error);
+      expect(v.at(0)).to.be.an.instanceof(Error);
+      expect(v.at(1)).to.be.an.instanceof(Error);
+      expect(v.at(2)).to.be.an.instanceof(Error);
+      expect(v.at(20)).to.be.an.instanceof(Error);
       v.push_back(100);
-      expect(v.at.bind(v, 0)).to.not.throw(Error);
+      expect(v.at(0)).to.not.be.an.instanceof(Error);
       expect(v.at(0)).to.equal(100);
-      expect(v.at.bind(v, 1)).to.throw(Error);
-      expect(v.at.bind(v, 2)).to.throw(Error);
+      expect(v.at(1)).to.be.an.instanceof(Error);
+      expect(v.at(2)).to.be.an.instanceof(Error);
       v.push_back(200);
       expect(v.at(1)).to.equal(200);
-      expect(v.at.bind(v, 0)).to.not.throw(Error);
-      expect(v.at.bind(v, 1)).to.not.throw(Error);
-      expect(v.at.bind(v, 2)).to.throw(Error);
+      expect(v.at(0)).to.not.be.an.instanceof(Error);
+      expect(v.at(1)).to.not.be.an.instanceof(Error);
+      expect(v.at(2)).to.be.an.instanceof(Error);
       v.push_back(300);
-      expect(v.at.bind(v, 0)).to.not.throw(Error);
+      expect(v.at(0)).to.not.be.an.instanceof(Error);
       expect(v.at(2)).to.equal(300);
-      expect(v.at.bind(v, 1)).to.not.throw(Error);
-      expect(v.at.bind(v, 2)).to.not.throw(Error);
+      expect(v.at(1)).to.not.be.an.instanceof(Error);
+      expect(v.at(2)).to.not.be.an.instanceof(Error);
     });
 
     it('accesses the back element', function () {
       var v = new Vector('string');
-      expect(v.back.bind(v)).to.throw(Error);
+      expect(v.back()).to.be.an.instanceof(Error);
       v.push_back('yo!');
-      expect(v.back.bind(v)).to.not.throw(Error);
+      expect(v.back()).to.not.be.an.instanceof(Error);
       v.back().should.equal('yo!');
     });
 

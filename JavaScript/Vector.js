@@ -88,7 +88,7 @@ function Vector (type, size) {
 
     at: function (idx) {
       if (idx < 0 || idx > objects.length - 1) {
-        throw new Error('Out of bounds!');
+        return new Error('Out of bounds!');
       }
 
       return objects[idx];
