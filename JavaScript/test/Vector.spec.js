@@ -199,6 +199,123 @@ describe('Vector', function () {
   });
 
   describe('Traversing the Vector with Iterators', function () {
+    it('returns an Error when returning an iterator to a non-existent position', function () {
+      var v = new Vector('string');
 
+      expect(v.begin().curr()).to.be.an.instanceof(Error);
+      expect(v.end().curr()).to.be.an.instanceof(Error);
+
+      v.push_back('yo!');
+      expect(v.begin().curr()).to.not.be.an.instanceof(Error);
+      expect(v.begin().curr()).to.be.a('string');
+      expect(v.begin().curr()).to.equal('yo!');
+
+      expect(v.begin().next()).to.be.an.instanceof(Error);
+    });
+
+    it('returns an iterator with methods begin and end', function () {
+      var v = new Vector('string'),
+          begin,
+          end;
+
+      v.push_back('yo!');
+
+      expect(v.begin()).to.not.be.an.instanceof(Error);
+      expect(v.end()).to.not.be.an.instanceof(Error);
+
+      begin = v.begin();
+      end = v.end();
+
+      expect(begin.curr).to.be.a('function');
+      expect(begin.next).to.be.a('function');
+      expect(begin.prev).to.be.a('function');
+      expect(end.curr).to.be.a('function');
+      expect(end.next).to.be.a('function');
+      expect(end.prev).to.be.a('function');
+    });
+
+    it('returns the same iterator when it only has one element', function () {
+      var v = new Vector('string'),
+          begin,
+          end;
+
+      v.push_back('yo!');
+
+      begin = v.begin();
+      end = v.end();
+
+      expect(begin.getVector()).to.equal(v);
+      expect(end.getVector()).to.equal(v);
+      expect(begin.getIndex()).to.equal(0);
+      expect(end.getIndex()).to.equal(1);
+
+      expect(begin.next()).to.be.an.instanceof(Error);
+      expect(begin.sameAs(end)).to.be.ok;
+    });
+
+    it('can traverse forward and backward', function () {
+      var v = new Vector('string'),
+          begin,
+          end;
+
+      v.push_back('hi')
+        .push_back('world!')
+        .push_back('i')
+        .push_back('love')
+        .push_back('you');
+
+      begin = v.begin();
+      end = v.end();
+
+      begin.curr().should.equal('hi');
+      begin.next().should.equal('world!');
+      begin.next().should.equal('i');
+      begin.next().should.equal('love');
+      begin.next().should.equal('you');
+      begin.next().should.be.an.instanceof(Error);
+      begin.sameAs(end).should.be.ok;
+      begin.prev().should.equal('you');
+      begin.prev().should.equal('love');
+      begin.prev().should.equal('i');
+      begin.prev().should.equal('world!');
+      begin.prev().should.equal('hi');
+      begin.prev().should.be.an.instanceof(Error);
+
+      end.curr().should.be.an.instanceof(Error);
+      end.prev().should.equal('you');
+      end.prev().should.equal('love');
+      end.prev().should.equal('i');
+      end.prev().should.equal('world!');
+      end.prev().should.equal('hi');
+      end.sameAs(v.begin()).should.be.ok;
+      end.prev().should.be.an.instanceof(Error);
+      end.next().should.equal('hi');
+      end.next().should.equal('world!');
+      end.next().should.equal('i');
+      end.next().should.equal('love');
+      end.next().should.equal('you');
+      end.next().should.be.an.instanceof(Error);
+    });
+
+    it('can access the whole vector with a while loop', function () {
+      var v = new Vector('number'),
+          idx = 0,
+          begin,
+          end;
+
+      v.push_back(1)
+        .push_back(2)
+        .push_back(3)
+        .push_back(4)
+        .push_back(5);
+
+      begin = v.begin();
+      end = v.end();
+
+      while (!begin.sameAs(end)) {
+        expect(begin.curr()).to.equal(v.at(idx++));
+        begin.next();
+      }
+    });
   });
 });
