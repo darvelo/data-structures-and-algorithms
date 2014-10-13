@@ -1,0 +1,14 @@
+node_modules
+dist
+.tmp
+.sass-cache
+coverage
+
+# vim-related
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+.vimrc
+*~
