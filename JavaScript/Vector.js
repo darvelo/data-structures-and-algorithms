@@ -103,7 +103,7 @@ function Vector (type, size) {
     },
 
     end: function () {
-      return new Iterator(this, objects.length-1);
+      return new Iterator(this, objects.length);
     },
 
     copy: function () {
