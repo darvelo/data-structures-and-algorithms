@@ -1,0 +1,13 @@
+{
+  "name": "data-structures-and-algos-in-js",
+  "description": "Data structures and Algorithms in JavaScript",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^1.21.5"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "author": "David Arvelo",
+  "license": "MIT"
+}
