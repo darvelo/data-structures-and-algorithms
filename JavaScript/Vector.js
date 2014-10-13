@@ -1,5 +1,5 @@
 function Iterator (vector, idx) {
-  if (!vector.isVector) {
+  if (!vector.isVector()) {
     throw new Error('Value passed to Iterator was not a Vector type!');
   }
 
@@ -36,6 +36,7 @@ function Iterator (vector, idx) {
 
 function Vector (type, size) {
   var objects = [],
+      isVector = true,
       i;
 
   if (type !== 'string' && type !== 'number') {
@@ -58,7 +59,7 @@ function Vector (type, size) {
   }
 
   return {
-    isVector: true,
+    isVector: function () { return isVector; },
 
     push_back: function (val) {
       if (typeof val !== type) {
