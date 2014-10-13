@@ -115,7 +115,17 @@ function Vector (type, size) {
         throw new Error('Tried to copy from a non-Vector!');
       }
 
-      objects = vector.copy();
+      var copy = vector.copy();
+
+      if (!Array.isArray(copy)) {
+        throw new Error('Vector#copy did not return a proper array!');
+      }
+
+      if (copy.length && typeof copy[0] !== type) {
+        throw new Error('The vector was not of the same type as the vector being copied!');
+      }
+
+      objects = copy;
     },
 
     resize: function (newSize) {
