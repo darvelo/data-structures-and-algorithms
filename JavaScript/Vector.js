@@ -95,7 +95,7 @@ function Vector (type, size) {
     },
 
     back: function () {
-      return objects[objects.length - 1];
+      return this.at(objects.length - 1);
     },
 
     begin: function () {
