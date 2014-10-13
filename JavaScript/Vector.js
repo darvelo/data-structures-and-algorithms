@@ -15,7 +15,7 @@ function Iterator (vector, idx) {
     },
 
     sameAs: function (iter) {
-      return (vector === iter.getVector() && this.idx === iter.getIndex());
+      return (vector === iter.getVector() && idx === iter.getIndex());
     },
 
     curr: function () {
