@@ -61,23 +61,25 @@ function List (type) {
     insert: function (itr, val) {
       this.checkVal(val);
 
-      var newNode = new ListNode(val, itr.prev().getNode(), itr.next().getNode());
-      itr.prev().getNode().next = itr.next().getNode().prev = newNode;
+      var currNode = itr.getNode(),
+          newNode = new ListNode(val, currNode.prev, currNode);
+
+      currNode.prev.next = currNode.prev = newNode;
       ++size;
 
       return new ListIterator(this, newNode);
     },
 
     erase: function (itr) {
-      var nextNode = itr.next().getNode();
+      var currNode = itr.getNode(),
+          nextNode = currNode.next;
 
-      itr.prev().getNode().next = itr.next().getNode();
-      itr.next().getNode().prev = itr.prev().getNode();
+      currNode.prev.next = currNode.next;
+      currNode.next.prev = currNode.prev;
+      --size;
 
       // allow garbage collection
-      this.destroyNode(itr.getNode());
-
-      --size;
+      this.destroyNode(currNode);
 
       return new ListIterator(this, nextNode);
     },
