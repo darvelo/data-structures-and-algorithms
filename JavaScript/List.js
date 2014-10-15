@@ -99,7 +99,12 @@ function List (type) {
     },
 
     pop_front: function () {
-      this.erase(this.begin());
+      var begin = this.begin();
+
+      if (!begin.sameAs(this.end())) {
+        this.erase(begin);
+      }
+
       return this;
     },
 
@@ -110,7 +115,12 @@ function List (type) {
     },
 
     pop_back: function () {
-      this.erase(this.end().prev());
+      var end = this.end();
+
+      if (!end.sameAs(this.begin())) {
+        this.erase(end.prev());
+      }
+
       return this;
     },
 
