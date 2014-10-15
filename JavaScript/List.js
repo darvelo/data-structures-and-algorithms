@@ -54,7 +54,7 @@ function List (type) {
 
     checkVal: function (val) {
       if (typeof val !== type) {
-        throw new Error('Value: "%s" was not a valid type for this list!', typeof val);
+        throw new Error('Value: "' + typeof val + '" was not a valid type for this list!');
       }
     },
 
