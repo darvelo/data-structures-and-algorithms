@@ -17,6 +17,9 @@ function ListIterator (list, node) {
       current = current.prev;
       return this;
     },
+    destroyNode: function () {
+      current = current.next = current.prev = current.data = null;
+    }
   };
 }
 
@@ -36,10 +39,14 @@ function List (type) {
     size: function () { return size; },
     empty: function () { return this.size() === 0; },
 
-    insert: function (itr, val) {
+    checkVal: function (val) {
       if (typeof val !== type) {
         throw new Error('Value: "%s" was not a valid type for this list!', typeof val);
       }
+    },
+
+    insert: function (itr, val) {
+      this.checkVal(val);
 
       var newNode = new ListNode(val, itr.prev().curr(), itr.next().curr());
       itr.prev().curr().next = itr.next().curr().prev = newNode;
@@ -48,7 +55,52 @@ function List (type) {
     },
 
     erase: function (itr) {
+      itr.prev().curr().next = itr.next().curr();
+      itr.next().curr().prev = itr.prev().curr();
 
+      // allow garbage collection
+      itr.destroyNode();
+
+      --size;
+      return this;
+    },
+
+    clear: function () {
+      while (!this.empty()) {
+        this.pop_front();
+      }
+
+      return this;
+    },
+
+    push_front: function (val) {
+      this.checkVal(val);
+      this.insert(this.begin(), val);
+      return this;
+    },
+
+    pop_front: function () {
+      this.erase(this.begin());
+      return this;
+    },
+
+    push_back: function (val) {
+      this.checkVal(val);
+      this.insert(this.end(), val);
+      return this;
+    },
+
+    pop_back: function () {
+      this.erase(this.end().prev());
+      return this;
+    },
+
+    begin: function () {
+      return new ListIterator(this.head.next);
+    },
+
+    end: function () {
+      return new ListIterator(this.tail);
     },
   };
 }
