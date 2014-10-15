@@ -1,3 +1,6 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 /**
  * Implementation of vector
  */
@@ -162,3 +165,5 @@ private:
   size_t _size = 0;
   size_t _capacity = PADDING;
 };
+
+#endif

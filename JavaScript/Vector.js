@@ -112,7 +112,7 @@ function Vector (type, size) {
     },
 
     copyFrom: function (vector) {
-      if (! vector instanceof Vector) {
+      if (!vector.isVector()) {
         throw new Error('Tried to copy from a non-Vector!');
       }
 
