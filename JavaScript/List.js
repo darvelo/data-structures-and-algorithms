@@ -6,6 +6,7 @@ function ListNode (data, prev, next) {
 
 function ListIterator (list, node) {
   return {
+    getList: function () { return list; },
     getNode: function () { return node; },
     data: function () { return node.data; },
     next: function () {
@@ -15,6 +16,13 @@ function ListIterator (list, node) {
     prev: function () {
       node = node.prev;
       return this;
+    },
+    sameAs: function (itr) {
+      if (list !== itr.getList()) {
+        throw new Error('Tried to compare iterators to different lists!');
+      }
+
+      return node === itr.getNode();
     },
     destroyNode: function () {
       node = node.next = node.prev = node.data = null;
