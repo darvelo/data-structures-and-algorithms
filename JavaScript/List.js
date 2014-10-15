@@ -5,21 +5,20 @@ function ListNode (data, prev, next) {
 }
 
 function ListIterator (list, node) {
-  var current = node;
-
   return {
-    curr: function () { return current; },
+    getNode: function () { return node; },
+    data: function () { return node.data; },
     next: function () {
-      current = current.next;
+      node = node.next;
       return this;
     },
     prev: function () {
-      current = current.prev;
+      node = node.prev;
       return this;
     },
     destroyNode: function () {
-      current = current.next = current.prev = current.data = null;
-    }
+      node = node.next = node.prev = node.data = null;
+    },
   };
 }
 
@@ -48,15 +47,15 @@ function List (type) {
     insert: function (itr, val) {
       this.checkVal(val);
 
-      var newNode = new ListNode(val, itr.prev().curr(), itr.next().curr());
-      itr.prev().curr().next = itr.next().curr().prev = newNode;
+      var newNode = new ListNode(val, itr.prev().getNode(), itr.next().getNode());
+      itr.prev().getNode().next = itr.next().getNode().prev = newNode;
       ++size;
       return this;
     },
 
     erase: function (itr) {
-      itr.prev().curr().next = itr.next().curr();
-      itr.next().curr().prev = itr.prev().curr();
+      itr.prev().getNode().next = itr.next().getNode();
+      itr.next().getNode().prev = itr.prev().getNode();
 
       // allow garbage collection
       itr.destroyNode();
