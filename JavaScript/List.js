@@ -28,7 +28,7 @@ function ListIterator (list, node) {
 }
 
 function List (type) {
-  if (typeof type !== 'number' && typeof type !== 'string') {
+  if (type !== 'number' && type !== 'string') {
     throw new Error('The given initial type for the new List was not valid! Value: ' + type);
   }
 
