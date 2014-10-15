@@ -96,11 +96,11 @@ function List (type) {
     },
 
     begin: function () {
-      return new ListIterator(this.head.next);
+      return new ListIterator(this, head.next);
     },
 
     end: function () {
-      return new ListIterator(this.tail);
+      return new ListIterator(this, tail);
     },
   };
 }
