@@ -24,9 +24,6 @@ function ListIterator (list, node) {
 
       return node === itr.getNode();
     },
-    destroyNode: function () {
-      node = node.next = node.prev = node.data = null;
-    },
   };
 }
 
@@ -45,6 +42,15 @@ function List (type) {
   return {
     size: function () { return size; },
     empty: function () { return this.size() === 0; },
+    destroyList: function () {
+      this.clear();
+      this.destroyNode(head);
+      this.destroyNode(tail);
+    },
+
+    destroyNode: function (node) {
+      node.next = node.prev = node.data = null;
+    },
 
     checkVal: function (val) {
       if (typeof val !== type) {
@@ -58,18 +64,22 @@ function List (type) {
       var newNode = new ListNode(val, itr.prev().getNode(), itr.next().getNode());
       itr.prev().getNode().next = itr.next().getNode().prev = newNode;
       ++size;
-      return this;
+
+      return new ListIterator(this, newNode);
     },
 
     erase: function (itr) {
+      var nextNode = itr.next().getNode();
+
       itr.prev().getNode().next = itr.next().getNode();
       itr.next().getNode().prev = itr.prev().getNode();
 
       // allow garbage collection
-      itr.destroyNode();
+      this.destroyNode(itr.getNode());
 
       --size;
-      return this;
+
+      return new ListIterator(this, nextNode);
     },
 
     clear: function () {
