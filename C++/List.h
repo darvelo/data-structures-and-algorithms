@@ -109,7 +109,11 @@ public:
         friend List<Object>;
     };
 
-    List(size_t initialSize = 0) : theSize{initialSize} { }
+    List(size_t initialSize = 0, Object initialValue = Object()) {
+        for (size_t i = 0; i != initialSize; ++i) {
+            push_back(initialValue);
+        }
+    }
 
     ~List() {
         clear();
@@ -164,6 +168,14 @@ public:
         }
 
         return *this;
+    }
+
+    void push_front(const Object& data) {
+        insert(begin(), data);
+    }
+
+    void push_back(const Object& data) {
+        insert(end(), data);
     }
 
     List& pop_front() {
