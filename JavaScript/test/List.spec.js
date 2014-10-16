@@ -37,6 +37,34 @@ describe('List', function () {
       lst.destroyList();
     });
 
+    it('fails to add an element of an improper type', function () {
+      lst = new List('number');
+      lst.size().should.equal(0);
+      lst.empty().should.be.ok;
+      expect(function () { lst.push_back('yo!'); }).to.throw(Error);
+      expect(function () { lst.push_front('yo!'); }).to.throw(Error);
+      expect(function () { lst.insert(lst.begin(), 'yo!'); }).to.throw(Error);
+      expect(function () { lst.push_back(2); }).to.not.throw(Error);
+      expect(function () { lst.push_front(2); }).to.not.throw(Error);
+      expect(function () { lst.insert(lst.begin(), 2); }).to.not.throw(Error);
+      lst.size().should.equal(3);
+      lst.empty().should.be.not.ok;
+
+      lst.destroyList();
+
+      lst = new List('string');
+      lst.size().should.equal(0);
+      lst.empty().should.be.ok;
+      expect(function () { lst.push_back(2); }).to.throw(Error);
+      expect(function () { lst.push_front(2); }).to.throw(Error);
+      expect(function () { lst.insert(lst.begin(), 2); }).to.throw(Error);
+      expect(function () { lst.push_back('yo!'); }).to.not.throw(Error);
+      expect(function () { lst.push_front('yo!'); }).to.not.throw(Error);
+      expect(function () { lst.insert(lst.begin(), 'yo!'); }).to.not.throw(Error);
+      lst.size().should.equal(3);
+      lst.empty().should.be.not.ok;
+    });
+
     it('an empty list has begin() equal to end()', function () {
       lst = new List('number');
       lst.begin().sameAs(lst.end()).should.be.ok;
@@ -69,6 +97,8 @@ describe('List', function () {
         begin.data().should.equal('heyy' + i++);
         begin.next();
       }
+
+      lst.end().prev().data().should.equal('heyy3');
     });
 
     it('push_front elements', function () {
@@ -90,6 +120,8 @@ describe('List', function () {
         begin.data().should.equal('heyy' + i--);
         begin.next();
       }
+
+      lst.end().prev().data().should.equal('heyy0');
     });
 
     it('insert elements from the front', function () {
@@ -111,6 +143,8 @@ describe('List', function () {
         begin.data().should.equal('heyy' + i--);
         begin.next();
       }
+
+      lst.end().prev().data().should.equal('heyy0');
     });
 
     it('insert elements from the back', function () {
@@ -132,6 +166,8 @@ describe('List', function () {
         begin.data().should.equal('heyy' + i++);
         begin.next();
       }
+
+      lst.end().prev().data().should.equal('heyy3');
     });
 
     it('inserts elements from somewhere in the middle', function () {
@@ -162,6 +198,175 @@ describe('List', function () {
         itr.data().should.equal(i++);
         itr.next();
       }
+
+      lst.end().prev().data().should.equal(5);
+    });
+  });
+
+  describe('removing elements', function () {
+    afterEach(function () {
+      lst.destroyList();
+    });
+
+    it('destroys a node properly', function () {
+      var fakeNode = {
+        data: 'fake',
+        prev: 'fake',
+        next: 'fake',
+      };
+
+      lst = new List('string');
+      lst.destroyNode(fakeNode);
+
+      expect(fakeNode.data).to.equal(null);
+      expect(fakeNode.prev).to.equal(null);
+      expect(fakeNode.next).to.equal(null);
+    });
+
+    it('clears a list', function () {
+      lst = new List('number');
+      lst.push_back(1)
+        .push_back(1)
+        .push_back(1)
+        .push_back(1)
+        .push_back(1);
+
+      lst.size().should.equal(5);
+      lst.clear();
+      lst.size().should.equal(0);
+      lst.begin().sameAs(lst.end()).should.be.ok;
+    });
+
+    it('can pop_front', function () {
+      var i = 1,
+          begin;
+
+      lst = new List('number');
+
+      lst.push_back(0)
+        .push_back(1)
+        .push_back(2);
+
+      lst.size().should.equal(3);
+      lst.pop_front();
+
+      begin = lst.begin();
+
+      while(!begin.sameAs(lst.end())) {
+        begin.data().should.equal(i++);
+        begin.next();
+      }
+
+      lst.end().prev().data().should.equal(2);
+    });
+
+    it('can pop_back', function () {
+      var i = 0,
+          begin;
+
+      lst = new List('number');
+
+      lst.push_back(0)
+        .push_back(1)
+        .push_back(2);
+
+      lst.size().should.equal(3);
+      lst.pop_back();
+
+      begin = lst.begin();
+
+      while(!begin.sameAs(lst.end())) {
+        begin.data().should.equal(i++);
+        begin.next();
+      }
+
+      lst.end().prev().data().should.equal(1);
+    });
+
+    it('can erase from the front', function () {
+      var i = 1,
+          begin;
+
+      lst = new List('number'),
+      lst.size().should.equal(0);
+
+      lst.push_back(0)
+        .push_back(1)
+        .push_back(2);
+
+      lst.size().should.equal(3);
+      lst.erase(lst.begin());
+
+      begin = lst.begin();
+
+      while(!begin.sameAs(lst.end())) {
+        begin.data().should.equal(i++);
+        begin.next();
+      }
+
+      lst.end().prev().data().should.equal(2);
+    });
+
+    it('can erase from the back', function () {
+      var i = 0,
+          begin;
+
+      lst = new List('number'),
+      lst.size().should.equal(0);
+
+      lst.push_back(0)
+        .push_back(1)
+        .push_back(2);
+
+      lst.size().should.equal(3);
+      lst.erase(lst.end().prev());
+
+      begin = lst.begin();
+
+      while(!begin.sameAs(lst.end())) {
+        begin.data().should.equal(i++);
+        begin.next();
+      }
+
+      lst.end().prev().data().should.equal(1);
+    });
+
+    it('can erase from somewhere in the middle', function () {
+      var i,
+          itr;
+
+      lst = new List('number'),
+      lst.size().should.equal(0);
+      lst.empty().should.be.ok;
+
+      itr = lst.begin();
+
+      itr = lst.insert(itr, 3);
+      itr = lst.insert(itr, 1);
+      itr.next();
+      itr = lst.insert(itr, 2);
+      itr.next().next();
+      itr = lst.insert(itr, 5);
+      itr = lst.insert(itr, 4);
+      itr = lst.insert(itr, 999);
+      itr.next().next().next();
+
+      itr.sameAs(lst.end()).should.be.ok;
+      lst.size().should.equal(6);
+      lst.empty().should.not.be.ok;
+
+      itr.prev().prev().prev();
+      lst.erase(itr);
+
+      i = 1;
+      itr = lst.begin();
+
+      while (!itr.sameAs(lst.end())) {
+        itr.data().should.equal(i++);
+        itr.next();
+      }
+
+      lst.end().prev().data().should.equal(5);
     });
   });
 });
