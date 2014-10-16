@@ -1,7 +1,7 @@
 function ListNode (data, prev, next) {
-  this.data = data || null;
-  this.prev = prev || null;
-  this.next = next || null;
+  this.data = (typeof data === 'undefined' ? null :  data);
+  this.prev = (typeof prev === 'undefined' ? null :  prev);
+  this.next = (typeof next === 'undefined' ? null :  next);
 }
 
 function ListIterator (list, node) {
