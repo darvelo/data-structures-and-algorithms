@@ -131,6 +131,14 @@ function List (type) {
     end: function () {
       return new ListIterator(this, tail);
     },
+
+    front: function () {
+      return head.next.data;
+    },
+
+    back: function () {
+      return tail.prev.data;
+    }
   };
 }
 

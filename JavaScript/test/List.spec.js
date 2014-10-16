@@ -369,4 +369,38 @@ describe('List', function () {
       lst.end().prev().data().should.equal(5);
     });
   });
+
+  describe('accessing elements', function () {
+    afterEach(function () {
+      lst.destroyList();
+    });
+
+    it('gets the front element', function () {
+      lst = new List('string');
+      lst.push_front('world!');
+      lst.push_front('hello');
+      expect(lst.front()).to.equal('hello');
+    });
+
+    it('gets the front element with an iterator', function () {
+      lst = new List('string');
+      lst.push_front('world!');
+      lst.push_front('hello');
+      expect(lst.begin().data()).to.equal('hello');
+    });
+
+    it('gets the back element', function () {
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world!');
+      expect(lst.back()).to.equal('world!');
+    });
+
+    it('gets the back element with an iterator', function () {
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world!');
+      expect(lst.end().prev().data()).to.equal('world!');
+    });
+  });
 });
