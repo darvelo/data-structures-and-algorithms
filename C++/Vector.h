@@ -136,7 +136,7 @@ public:
   }
 
   void pop_back() {
-    return --_size;
+    --_size;
   }
 
   typedef Object* iterator;
