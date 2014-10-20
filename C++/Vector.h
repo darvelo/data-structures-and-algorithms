@@ -107,6 +107,14 @@ public:
     return objects[pos];
   }
 
+  Object & back() {
+    if (size() == 0) {
+      throw "This Vector has no items!";
+    }
+
+    return objects[_size - 1];
+  }
+
   const Object & back() const {
     if (size() == 0) {
       throw "This Vector has no items!";
