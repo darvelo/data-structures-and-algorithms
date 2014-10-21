@@ -90,7 +90,7 @@ public:
         iterator operator++ (int) {
             iterator old = *this;
             ++( *this );
-            return *this;
+            return old;
         }
 
         iterator& operator-- () {
