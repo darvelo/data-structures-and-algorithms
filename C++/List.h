@@ -110,6 +110,8 @@ public:
     };
 
     List(size_t initialSize = 0, Object initialValue = Object()) {
+        init();
+
         for (size_t i = 0; i != initialSize; ++i) {
             push_back(initialValue);
         }
@@ -199,10 +201,17 @@ public:
 
     iterator end() { return iterator(tail); }
     const_iterator end() const { return const_iterator(tail); }
+
+    void init() {
+        head = new Node;
+        tail = new Node;
+        head->next = tail;
+        tail->prev = head;
+    }
 private:
     size_t theSize = 0;
-    Node* head = new Node(Object(), nullptr, tail);
-    Node* tail = new Node(Object(), head, nullptr);
+    Node* head;
+    Node* tail;
 };
 
 #endif
