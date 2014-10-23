@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var Vector = require('../Vector');
+var Vector = require('../data-structures/Vector');
 
 chai.should();
 

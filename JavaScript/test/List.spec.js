@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var List = require('../List');
+var List = require('../data-structures/List');
 
 chai.should();
 

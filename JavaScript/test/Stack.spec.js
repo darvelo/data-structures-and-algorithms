@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var Stack = require('../Stack');
+var Stack = require('../data-structures/Stack');
 
 chai.should();
 

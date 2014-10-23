@@ -1,5 +1,5 @@
 var chai = require('chai');
-var binarySearch = require('../BinarySearch');
+var binarySearch = require('../algorithms/BinarySearch');
 
 chai.should();
 
