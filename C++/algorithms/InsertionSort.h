@@ -24,6 +24,13 @@ void insertionSort(vector<Comparable>& a) {
 
 template <typename Iterator>
 void insertionSort(Iterator begin, Iterator end) {
+    insertionSort(begin, end, [] (decltype(*begin) a, decltype(*begin) b) -> bool {
+        return a < b;
+    });
+}
+
+template <typename Iterator, typename Comparator>
+void insertionSort(Iterator begin, Iterator end, Comparator lessThan) {
     if (begin == end) {
         return;
     }
@@ -33,7 +40,7 @@ void insertionSort(Iterator begin, Iterator end) {
     for (Iterator i = begin + 1; i != end; ++i) {
         auto tmp = std::move(*i);
 
-        for (j = i; j != begin && tmp < *(j - 1); --j) {
+        for (j = i; j != begin && lessThan(tmp, *(j - 1)); --j) {
             *j = std::move(*(j - 1));
         }
 
