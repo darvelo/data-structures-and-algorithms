@@ -30,6 +30,26 @@ public:
             return retrieve();
         }
 
+        const_iterator operator+ (size_t i) {
+            const_iterator next{this->current};
+
+            while (i--) {
+                ++next;
+            }
+
+            return next;
+        }
+
+        const_iterator operator- (size_t i) {
+            const_iterator prev{this->current};
+
+            while (i--) {
+                --prev;
+            }
+
+            return prev;
+        }
+
         const_iterator & operator++ () {
             current = current->next;
             return *this;
@@ -80,6 +100,26 @@ public:
 
         const Object & operator* () const {
             return const_iterator::operator*;
+        }
+
+        iterator operator+ (size_t i) {
+            iterator next = this->current;
+
+            while (i--) {
+                ++next;
+            }
+
+            return next;
+        }
+
+        iterator operator- (size_t i) {
+            iterator prev = this->current;
+
+            while (i--) {
+                --prev;
+            }
+
+            return prev;
         }
 
         iterator & operator++ () {
