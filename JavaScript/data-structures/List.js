@@ -6,9 +6,11 @@ function ListNode (data, prev, next) {
 
 function ListIterator (list, node) {
   return {
+    clone: function () { return new ListIterator(list, node); },
     getList: function () { return list; },
     getNode: function () { return node; },
     data: function () { return node.data; },
+    setData: function (data) { node.data = data; },
     next: function () {
       node = node.next;
       return this;
@@ -23,6 +25,24 @@ function ListIterator (list, node) {
       }
 
       return node === itr.getNode();
+    },
+    minus: function (i) {
+      var itr = new ListIterator(list, node);
+
+      while (i--) {
+        itr.prev();
+      }
+
+      return itr;
+    },
+    plus: function (i) {
+      var itr = new ListIterator(list, node);
+
+      while (i--) {
+        itr.next();
+      }
+
+      return itr;
     },
   };
 }

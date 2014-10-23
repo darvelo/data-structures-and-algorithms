@@ -402,5 +402,121 @@ describe('List', function () {
       lst.push_back('world!');
       expect(lst.end().prev().data()).to.equal('world!');
     });
+
+    it('sets data using an iterator', function () {
+      var itr;
+
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world!');
+
+      itr = lst.begin();
+      expect(itr.data()).to.equal('hello');
+
+      itr.next();
+      expect(itr.data()).to.equal('world!');
+
+      itr.prev();
+      expect(itr.data()).to.equal('hello');
+
+      itr.setData('hi,');
+      expect(itr.data()).to.equal('hi,');
+
+      itr.next();
+      expect(itr.data()).to.equal('world!');
+
+      itr.setData('W3rld!');
+      expect(itr.data()).to.equal('W3rld!');
+
+      itr.prev();
+      expect(itr.data()).to.equal('hi,');
+
+      itr.next();
+      expect(itr.data()).to.equal('W3rld!');
+    });
+
+    it('gets a clone of the current iterator', function () {
+      var itr, clone;
+
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world!');
+
+      itr = lst.begin();
+      clone = itr.clone();
+
+      expect(itr.data()).to.equal(clone.data());
+
+      itr = lst.begin().next();
+
+      expect(itr.data()).to.not.equal(clone.data());
+
+      clone.next();
+
+      expect(itr.data()).to.equal(clone.data());
+
+      itr = itr.clone();
+
+      expect(itr.data()).to.equal(clone.data());
+    });
+
+    it('uses iterator plus operations to get an iterator of distant data', function () {
+      var itr, newItr;
+
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world,');
+      lst.push_back('here');
+      lst.push_back('i');
+      lst.push_back('am!');
+
+      itr = lst.begin();
+
+      newItr = itr.plus(0);
+      expect(itr.data()).to.equal('hello');
+      expect(newItr.data()).to.equal('hello');
+
+      // newItr is actually new and doesn't affect the other iterator
+      newItr = itr.plus(1);
+      expect(itr.data()).to.equal('hello');
+      expect(newItr.data()).to.equal('world,');
+
+      newItr = itr.plus(2);
+      expect(newItr.data()).to.equal('here');
+      newItr = itr.plus(3);
+      expect(newItr.data()).to.equal('i');
+      newItr = itr.plus(4);
+      expect(newItr.data()).to.equal('am!');
+    });
+
+    it('uses iterator minus operations to get an iterator of distant data', function () {
+      var itr, newItr;
+
+      lst = new List('string');
+      lst.push_back('hello');
+      lst.push_back('world,');
+      lst.push_back('here');
+      lst.push_back('i');
+      lst.push_back('am!');
+
+      itr = lst.end();
+      newItr = itr.minus(0);
+      expect(itr.data()).to.equal(null);
+      expect(newItr.data()).to.equal(null);
+
+      // newItr is actually new and doesn't affect the other iterator
+      newItr = itr.minus(1);
+      expect(itr.data()).to.equal(null);
+      expect(newItr.data()).to.equal('am!');
+
+      newItr = itr.minus(2);
+      expect(newItr.data()).to.equal('i');
+      newItr = itr.minus(3);
+      expect(newItr.data()).to.equal('here');
+      newItr = itr.minus(4);
+      expect(newItr.data()).to.equal('world,');
+      newItr = itr.minus(5);
+      expect(newItr.data()).to.equal('hello');
+    });
   });
 });
