@@ -157,13 +157,39 @@ public:
         }
     }
 
+    List(const List& rhs) {
+        init();
+        for (auto& x : rhs) {
+            push_back(x);
+        }
+    }
+
+    List& operator=(const List& rhs) {
+        List copy = rhs;
+        std::swap(*this, copy);
+        return *this;
+    }
+
+    List(const List&& rhs)
+        : theSize{rhs.theSize}, head{rhs.head}, tail{rhs.tail} {
+        rhs.theSize = 0;
+        rhs.head = rhs.tail = nullptr;
+    }
+
+    List& operator=(List&& rhs) {
+        std::swap(theSize, rhs.theSize);
+        std::swap(head, rhs.head);
+        std::swap(tail, rhs.tail);
+        return *this;
+    }
+
     ~List() {
         clear();
         delete head;
         delete tail;
     }
 
-    size_t size() {
+    size_t size() const {
         return theSize;
     }
 
