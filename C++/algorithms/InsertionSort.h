@@ -4,11 +4,8 @@
 #include <cstddef>
 #include <vector>
 
-using std::move;
-using std::vector;
-
 template <typename Comparable>
-void insertionSort(vector<Comparable>& a) {
+void insertionSort(std::vector<Comparable>& a) {
     for (std::size_t i = 1; i < a.size(); ++i) {
         Comparable tmp = std::move(a[i]);
 

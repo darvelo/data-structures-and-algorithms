@@ -3,8 +3,6 @@
 
 #include "List.h"
 
-using std::move;
-
 template <typename Object>
 class Queue {
 public:

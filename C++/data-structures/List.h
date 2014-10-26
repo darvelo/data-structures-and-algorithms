@@ -3,9 +3,6 @@
 
 #include <algorithm>
 
-using std::move;
-using std::swap;
-
 template <typename Object>
 class List {
 private:

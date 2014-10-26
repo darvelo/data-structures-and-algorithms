@@ -4,8 +4,6 @@
 #include <algorithm>
 #include "Vector.h"
 
-using std::move;
-
 template <typename Object>
 class Stack {
 public:

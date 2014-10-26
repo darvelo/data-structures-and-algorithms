@@ -2,10 +2,9 @@
 #define BINARYSEARCH_H
 
 #include <vector>
-using std::vector;
 
 template <typename Comparable>
-int binarySearch(const vector<Comparable>& a, const Comparable& x) {
+int binarySearch(const std::vector<Comparable>& a, const Comparable& x) {
     int low  = 0,
         high = a.size() - 1;
 
