@@ -17,7 +17,8 @@ function MergeSort (array) {
       merge(a0, a1, left, center, right);
     }
 
-    array = a0, a0 = a1, a1 = array;
+    // swap a0 and a1
+    i = a0, a0 = a1, a1 = i;
   }
 
   // the final sorted array from merge() is a1, but is swapped with a0 above.
