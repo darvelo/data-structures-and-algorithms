@@ -6,7 +6,12 @@
 
 template <typename Comparable>
 void insertionSort(std::vector<Comparable>& a) {
-    for (std::size_t i = 1; i < a.size(); ++i) {
+    insertionSort(a, 0, a.size());
+}
+
+template <typename Comparable>
+void insertionSort(std::vector<Comparable>& a, size_t begin, size_t end) {
+    for (size_t i = begin ; i < end; ++i) {
         Comparable tmp = std::move(a[i]);
 
         std::size_t j;
