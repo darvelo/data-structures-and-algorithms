@@ -16,7 +16,7 @@ describe('QuickSort with Custom Compare Function', function () {
       return b - a;
     };
 
-    quickSort(array , cmp);
+    quickSort(array, { compareFunc: cmp });
 
     array.should.deep.equal([9,8,7,6,5,4,3,2,1]);
   });
@@ -27,7 +27,7 @@ describe('QuickSort with Custom Compare Function', function () {
       return a.key.length - b.key.length;
     };
 
-    quickSort(array, cmp);
+    quickSort(array, { compareFunc: cmp });
 
     array.should.deep.equal([{ key: 'my' }, { key: 'car' }, { key: 'dude' }, { key: 'wheres' }]);
   });

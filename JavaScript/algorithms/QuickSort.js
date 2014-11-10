@@ -45,8 +45,6 @@ function quickSort (array, left, right, cmp) {
     return;
   }
 
-  cmp = (typeof cmp === 'function') ? cmp : defaultCompare;
-
   var pivot = median3(array, left, right),
       i  = left + 1,
       lt = left,
@@ -69,7 +67,9 @@ function quickSort (array, left, right, cmp) {
   quickSort(array, gt + 1, right, cmp);
 }
 
-function sort (array, cmp) {
+function sort (array, options) {
+  options = options || {};
+  var cmp = (typeof options.compareFunc === 'function') ? options.compareFunc : defaultCompare;
   quickSort(array, 0, array.length - 1, cmp);
 }
 
