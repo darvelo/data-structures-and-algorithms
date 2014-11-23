@@ -4,5 +4,7 @@ var shellSort = require('../algorithms/ShellSort.js');
 prototest({
   title: 'ShellSort',
   sortFunc: shellSort,
+  sortFuncIterators: null,
   testArrays: true,
+  testIterators: false
 });
