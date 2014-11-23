@@ -49,7 +49,7 @@ function makeTests (options) {
         i = 0;
 
         while (i++ < 1000) {
-          arr.push(Math.random() * 5000);
+          arr.push(Math.floor(Math.random() * 5000));
         }
 
         sortFunc(arr);
