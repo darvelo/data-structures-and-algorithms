@@ -84,7 +84,7 @@ function Vector (type, size) {
     },
 
     clear: function () {
-      objects = [];
+      objects.length = 0;
     },
 
     at: function (idx) {
@@ -108,7 +108,7 @@ function Vector (type, size) {
     },
 
     copy: function () {
-      return objects.slice(0);
+      return objects.slice();
     },
 
     copyFrom: function (vector) {
@@ -134,7 +134,12 @@ function Vector (type, size) {
         throw new Error('Out of bounds!');
       }
 
-      objects = objects.slice(0, newSize);
+      // only resize to smaller than current size
+      if (newSize > this.size()) {
+        return;
+      }
+
+      objects.length = newSize;
     },
   };
 }
