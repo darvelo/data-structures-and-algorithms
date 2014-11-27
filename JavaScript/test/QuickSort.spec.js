@@ -1,7 +1,7 @@
-var prototest = require('./prototest');
+var testFactory = require('./testFactory');
 var quickSort = require('../algorithms/QuickSort.js');
 
-prototest({
+testFactory({
   title: 'QuickSort',
   sortFunc: quickSort,
   sortFuncIterators: null,

@@ -1,8 +1,8 @@
-var prototest = require('./prototest');
+var testFactory = require('./testFactory');
 var insertionSort = require('../algorithms/InsertionSort.js');
 var insertionSortIterators = require('../algorithms/InsertionSortIterators.js');
 
-prototest({
+testFactory({
   title: 'InsertionSort',
   sortFunc: insertionSort,
   sortFuncIterators: insertionSortIterators,

@@ -1,7 +1,7 @@
-var prototest = require('./prototest');
+var testFactory = require('./testFactory');
 var mergeSort = require('../algorithms/MergeSort.js');
 
-prototest({
+testFactory({
   title: 'MergeSort',
   sortFunc: mergeSort,
   sortFuncIterators: null,

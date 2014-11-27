@@ -1,7 +1,7 @@
-var prototest = require('./prototest');
+var testFactory = require('./testFactory');
 var shellSort = require('../algorithms/ShellSort.js');
 
-prototest({
+testFactory({
   title: 'ShellSort',
   sortFunc: shellSort,
   sortFuncIterators: null,
