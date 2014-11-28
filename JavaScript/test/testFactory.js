@@ -4,17 +4,25 @@ var List = require('../data-structures/List.js');
 var expect = chai.expect;
 chai.should();
 
+function bindArgs (func, args) {
+  var slice = Array.prototype.slice;
+  return function () {
+    return func.apply(null, slice.apply(arguments).concat(args));
+  };
+}
+
 function makeTests (options) {
   if (!options.title || !options.sortFunc) {
     throw new Error('makeTests was missing key options!');
   }
 
-  var sortFunc = options.sortFunc,
-      sortFuncIterators = options.sortFuncIterators || sortFunc;
+  var args = options.args || [],
+      sortFunc = bindArgs(options.sortFunc, args),
+      sortFuncIterators = bindArgs(options.sortFuncIterators || sortFunc, args);
 
   describe(options.title, function () {
     if (options.testArrays) {
-      testArrays(sortFunc, sortFuncIterators);
+      testArrays(sortFunc);
     }
 
     if (options.testIterators) {
