@@ -18,7 +18,7 @@ function makeTests (options) {
 
   var args = options.args || [],
       sortFunc = bindArgs(options.sortFunc, args),
-      sortFuncIterators = bindArgs(options.sortFuncIterators || sortFunc, args);
+      sortFuncIterators = bindArgs(options.sortFuncIterators || options.sortFunc, args);
 
   describe(options.title, function () {
     if (options.testArrays) {
