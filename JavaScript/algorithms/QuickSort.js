@@ -16,18 +16,18 @@ function swap (array, i, j) {
   array[j] = tmp;
 }
 
-function median3 (array, left, right) {
+function median3 (array, left, right, cmp) {
   var mid = left + ((right - left) >> 1);
 
-  if (array[mid] < array[left]) {
+  if (cmp(array[mid], array[left]) < 0) {
     swap(array, left, mid);
   }
 
-  if (array[right] < array[left]) {
+  if (cmp(array[right], array[left]) < 0) {
     swap(array, left, right);
   }
 
-  if (array[right] < array[mid]) {
+  if (cmp(array[right], array[mid]) < 0) {
     swap(array, mid, right);
   }
 
@@ -45,7 +45,7 @@ function quickSort (array, left, right, cmp) {
     return;
   }
 
-  var pivot = median3(array, left, right),
+  var pivot = median3(array, left, right, cmp),
       i  = left + 1,
       lt = left,
       gt = right,
