@@ -2,9 +2,19 @@ var testFactory = require('./testFactory');
 var quickSort = require('../algorithms/QuickSort.js');
 
 testFactory({
-  title: 'QuickSort',
+  title: 'QuickSort Not Many Duplicates',
   sortFunc: quickSort,
   sortFuncIterators: null,
+  testArrays: true,
+  testIterators: false,
+  additionalTests: additionalTests,
+});
+
+testFactory({
+  title: 'QuickSort Many Duplicates',
+  sortFunc: quickSort,
+  sortFuncIterators: null,
+  args: [{ manyDuplicates: true }],
   testArrays: true,
   testIterators: false,
   additionalTests: additionalTests,
