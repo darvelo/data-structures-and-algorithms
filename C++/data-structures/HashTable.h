@@ -6,14 +6,14 @@
 #include <cstddef>
 
 static
-float abs(float num) {
+double abs(double num) {
     return (num < 0) ? -num : num;
 }
 
 static
-float sqrt(size_t num, float guess = 1) {
+double sqrt(size_t num, double guess = 1) {
     // check if guess is close enough
-    float difference = abs(guess * guess - num);
+    double difference = abs(guess * guess - num);
     if (difference < .001) {
         return guess;
     }
