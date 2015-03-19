@@ -21,7 +21,7 @@ Queue.prototype.enqueue = function(data) {
 
 Queue.prototype.dequeue = function() {
   if (!this.head) {
-    throw Error('Empty Queue. Cannot dequeue!');
+    throw new Error('Empty Queue. Cannot dequeue!');
   }
 
   var node = this.head;
