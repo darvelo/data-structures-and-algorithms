@@ -75,7 +75,7 @@ public:
         friend Graph<Data>;
     };
 public:
-    Graph() { }
+    Graph(bool _directed = false) : directed(_directed) { }
 
     Vertex& addVertex(std::string name, int weight = 0, Data* data = nullptr) {
         Vertex* v = new Vertex{name, weight, data};
@@ -124,6 +124,7 @@ public:
         });
 
         if (!exists) {
+            ++nEdges;
             srcEdges.push_back(&*sink);
         }
 
@@ -144,18 +145,22 @@ public:
 
     void print(std::ostream& out = std::cout) {
         out << "Printing Graph..." << std::endl;
-        out << "Size: " << size() << std::endl;
+        out << "Size: " << nvertices() << std::endl;
         for (auto& vec : *this) {
             vec.print(out);
         }
         out << std::endl;
     }
 
-    size_t size()    { return vertices.size(); }
     iterator begin() { return iterator(vertices.begin()); }
     iterator end()   { return iterator(vertices.end());   }
+
+    size_t nvertices() { return vertices.size(); }
+    size_t nedges() { return nEdges(); }
+    const bool directed = false;
 private:
     std::unordered_map<std::string, Vertex*> vertices;
+    int nEdges = 0;
 };
 
 #endif
