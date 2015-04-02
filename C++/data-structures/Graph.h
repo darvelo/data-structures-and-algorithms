@@ -12,12 +12,17 @@ public:
     class Vertex {
     public:
         void print(std::ostream& out = std::cout) {
-            out << "Vertex: " << name << ", Weight: " << weight << ", Edges:" << std::endl;
+            out << "Vertex: " << name
+                << ", Weight: " << weight
+                << ", Indegree: " << _indegree
+                << ", Edges:"
+                << std::endl;
             for (auto& v : edges) {
                 out << "    \"" << v->name << "\" " << v->weight << std::endl;
             }
         }
 
+        int indegree() { return _indegree; }
         int weight = 0;
         const std::string name;
         // pointer itself should stay const
@@ -27,6 +32,7 @@ public:
             : name(_name), weight(_weight), data(_data) { }
 
         std::list<Vertex*> edges;
+        int _indegree = 0;
         friend Graph<Data>;
     };
 
@@ -125,6 +131,7 @@ public:
 
         if (!exists) {
             ++nEdges;
+            ++(*sink)._indegree;
             srcEdges.push_back(&*sink);
         }
 
