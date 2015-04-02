@@ -133,6 +133,10 @@ public:
             ++nEdges;
             ++(*sink)._indegree;
             srcEdges.push_back(&*sink);
+
+            if (!directed) {
+                addEdge(to, from);
+            }
         }
 
         return true;
