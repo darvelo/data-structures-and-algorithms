@@ -14,11 +14,10 @@ private:
             : name(_name), weight(_weight), data(_data) { }
 
         void print(std::ostream& out = std::cout) {
-            out << "Name: " << name << ", Weight: " << weight << ", Edges: ";
+            out << "Vertex: " << name << ", Weight: " << weight << ", Edges:" << std::endl;
             for (auto& v : edges) {
-                out << v->name;
+                out << "    \"" << v->name << "\" " << v->weight << std::endl;
             }
-            out << std::endl;
         }
 
         int weight = 0;
@@ -63,7 +62,7 @@ public:
         }
 
         bool operator!=(const iterator& rhs) {
-            return !(current = rhs.current);
+            return !(current == rhs.current);
         }
     private:
         iterator(typename std::unordered_map<std::string,Vertex*>::iterator itr)
@@ -102,9 +101,10 @@ public:
     }
 
     void print(std::ostream& out = std::cout) {
+        out << "Printing Graph..." << std::endl;
         out << "Size: " << size() << std::endl;
-        for (auto& itr : vertices) {
-            out << itr.second->name;
+        for (auto& vec : *this) {
+            vec.print(out);
         }
         out << std::endl;
     }
