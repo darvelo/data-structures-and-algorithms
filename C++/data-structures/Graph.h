@@ -8,12 +8,9 @@
 
 template <typename Data>
 class Graph {
-private:
+public:
     class Vertex {
     public:
-        explicit Vertex(std::string _name, int _weight = 0, Data* _data = nullptr)
-            : name(_name), weight(_weight), data(_data) { }
-
         void print(std::ostream& out = std::cout) {
             out << "Vertex: " << name << ", Weight: " << weight << ", Edges:" << std::endl;
             for (auto& v : edges) {
@@ -26,10 +23,15 @@ private:
         // pointer itself should stay const
         const Data* data = nullptr;
     private:
+        explicit Vertex(std::string _name, int _weight = 0, Data* _data = nullptr)
+            : name(_name), weight(_weight), data(_data) { }
+
         std::list<Vertex*> edges;
         friend Graph<Data>;
     };
-public:
+
+    // wrap unordered_map iterators to produce a Vertex&
+    // rather than the unordered_map default, a pair
     class iterator {
     public:
         Vertex& operator*() {
@@ -66,8 +68,8 @@ public:
             return !(current == rhs.current);
         }
     private:
-        iterator(typename std::unordered_map<std::string,Vertex*>::iterator itr)
-            : current(itr) { }
+        iterator(typename std::unordered_map<std::string, Vertex*>::iterator iter)
+            : current(iter) { }
 
         typename std::unordered_map<std::string, Vertex*>::iterator current;
         friend Graph<Data>;
