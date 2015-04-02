@@ -1,10 +1,12 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <list>
 #include <iostream>
-#include <algorithm>
+#include <queue>
+#include <vector>
+#include <forward_list>
 #include <unordered_map>
+#include <algorithm>
 
 template <typename Data>
 class Graph {
@@ -31,7 +33,7 @@ public:
         explicit Vertex(std::string _name, int _weight = 0, Data* _data = nullptr)
             : name(_name), weight(_weight), data(_data) { }
 
-        std::list<Vertex*> edges;
+        std::forward_list<Vertex*> edges;
         int _indegree = 0;
         friend Graph<Data>;
     };
@@ -132,7 +134,7 @@ public:
         if (!exists) {
             ++nEdges;
             ++(*sink)._indegree;
-            srcEdges.push_back(&*sink);
+            srcEdges.push_front(&*sink);
 
             if (!directed) {
                 addEdge(to, from);
