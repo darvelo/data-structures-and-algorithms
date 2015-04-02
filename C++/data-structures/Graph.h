@@ -3,6 +3,7 @@
 
 #include <list>
 #include <iostream>
+#include <algorithm>
 #include <unordered_map>
 
 template <typename Data>
@@ -98,6 +99,45 @@ public:
         }
 
         return iterator(iter);
+    }
+
+    bool addEdge(std::string from, std::string to) {
+        iterator source = getVertex(from);
+        iterator theEnd = end();
+
+        if (source == theEnd) {
+            return false;
+        }
+
+        iterator sink = getVertex(to);
+
+        if (sink == theEnd) {
+            return false;
+        }
+
+        auto& srcEdges = (*source).edges;
+
+        bool exists = std::any_of(srcEdges.begin(), srcEdges.end(), [&to] (Vertex* v) {
+            return v->name == to;
+        });
+
+        if (!exists) {
+            srcEdges.push_back(&*sink);
+        }
+
+        return true;
+    }
+
+    bool addEdge(Vertex& from, Vertex& to) {
+        return addEdge(from.name, to.name);
+    }
+
+    bool addEdge(Vertex& from, std::string to) {
+        return addEdge(from.name, to);
+    }
+
+    bool addEdge(std::string from, Vertex& to) {
+        return addEdge(from, to.name);
     }
 
     void print(std::ostream& out = std::cout) {
