@@ -83,6 +83,12 @@ public:
         friend Graph<Data>;
     };
 public:
+    /* algorithms - defined elsewhere */
+#ifdef GRAPH_TOPSORT_H
+    std::vector<Vertex*> topSort();
+#endif
+
+    /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
     Vertex& addVertex(std::string name, int weight = 0, Data* data = nullptr) {
