@@ -25,12 +25,12 @@ public:
         }
 
         int indegree() { return _indegree; }
-        int weight = 0;
+        int weight = 1;
         const std::string name;
         // pointer itself should stay const
         const Data* data = nullptr;
     private:
-        explicit Vertex(std::string _name, int _weight = 0, Data* _data = nullptr)
+        explicit Vertex(std::string _name, int _weight = 1, Data* _data = nullptr)
             : name(_name), weight(_weight), data(_data) { }
 
         std::forward_list<Vertex*> edges;
@@ -89,7 +89,7 @@ public:
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
-    Vertex& addVertex(std::string name, int weight = 0, Data* data = nullptr) {
+    Vertex& addVertex(std::string name, int weight = 1, Data* data = nullptr) {
         Vertex* v = new Vertex{name, weight, data};
         auto result = vertices.insert({ name, v });
 
