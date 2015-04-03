@@ -2,7 +2,7 @@
 #define GRAPH_TOPSORT_H
 
 #include "../../data-structures/Graph.h"
-#include "../../utils.h" // CustomException
+#include "../../utils.h"
 
 template <typename Data>
 std::vector<typename Graph<Data>::Vertex*>
@@ -46,7 +46,7 @@ Graph<Data>::topSort() {
 
     // restore original indegrees
     while (!indegrees.empty())  {
-        std::pair<Vertex*, int>& pr = indegrees.front();
+        auto& pr = indegrees.front();
         pr.first->_indegree = pr.second;
         indegrees.pop();
     }

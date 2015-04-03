@@ -84,24 +84,20 @@ public:
     };
 public:
     /* algorithms - defined elsewhere */
-#ifdef GRAPH_TOPSORT_H
     std::vector<Vertex*> topSort();
-#endif
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
     Vertex& addVertex(std::string name, int weight = 0, Data* data = nullptr) {
         Vertex* v = new Vertex{name, weight, data};
-        std::pair<std::string, Vertex*> item{name, v};
-
-        auto result = vertices.insert(item);
+        auto result = vertices.insert({ name, v });
 
         // if insert failed, map already had such a key.
         // grab the element associated with that key
         if (!result.second) {
             delete v;
-            v = (*result.first).second;
+            v = result.first->second;
         }
 
         return *v;
@@ -181,5 +177,8 @@ private:
     std::unordered_map<std::string, Vertex*> vertices;
     int nEdges = 0;
 };
+
+/* algorithm definitions */
+#include "../algorithms/Graphs/topsort.h"
 
 #endif
