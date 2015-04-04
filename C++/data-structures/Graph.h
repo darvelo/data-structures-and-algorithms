@@ -17,6 +17,7 @@ public:
             out << "Vertex: " << name
                 << ", Weight: " << weight
                 << ", Indegree: " << _indegree
+                << ", Parent: " << (parent ? parent->name : "NONE")
                 << ", Edges:"
                 << std::endl;
             for (auto& v : edges) {
@@ -24,11 +25,18 @@ public:
             }
         }
 
-        int indegree() { return _indegree; }
-        int weight = 1;
+        // inherent properties
         const std::string name;
-        // pointer itself should stay const
-        const Data* data = nullptr;
+        int weight = 1;
+        int indegree() { return _indegree; }
+
+        // search parameters, are reset as needed
+        Vertex* parent = nullptr;
+        bool discovered = false;
+        bool processed = false;
+
+        // user-supplied data
+        Data* data = nullptr;
     private:
         explicit Vertex(std::string _name, int _weight = 1, Data* _data = nullptr)
             : name(_name), weight(_weight), data(_data) { }
@@ -85,6 +93,11 @@ public:
 public:
     /* algorithms - defined elsewhere */
     std::vector<Vertex*> topSort();
+    void initializeSearch();
+    void bfs(std::string start,
+             void(*processEarly)(Vertex& v) = nullptr,
+             void(*process)(Vertex& v) = nullptr,
+             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
@@ -180,5 +193,6 @@ private:
 
 /* algorithm definitions */
 #include "../algorithms/Graphs/topsort.h"
+#include "../algorithms/Graphs/bfs.h"
 
 #endif
