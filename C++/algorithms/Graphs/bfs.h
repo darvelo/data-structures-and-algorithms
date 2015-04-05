@@ -24,6 +24,7 @@ Graph<Data>::bfs(std::string start,
 
     Vertex* v = &*itr;
     v->discovered = true;
+    v->distance = 0;
 
     std::queue<Vertex*> q;
     q.push(v);
@@ -48,6 +49,7 @@ Graph<Data>::bfs(std::string start,
                 q.push(w);
                 w->discovered = true;
                 w->parent = v;
+                w->distance = v->distance + 1;
             }
         });
 

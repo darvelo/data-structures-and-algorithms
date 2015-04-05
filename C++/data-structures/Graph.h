@@ -7,6 +7,7 @@
 #include <forward_list>
 #include <unordered_map>
 #include <algorithm>
+#include <limits>
 
 template <typename Data>
 class Graph {
@@ -18,6 +19,7 @@ public:
                 << ", Weight: " << weight
                 << ", Indegree: " << _indegree
                 << ", Parent: " << (parent ? parent->name : "NONE")
+                << ", Distance: " << distance
                 << ", Edges:"
                 << std::endl;
             for (auto& v : edges) {
@@ -29,6 +31,7 @@ public:
         const std::string name;
         int weight = 1;
         int indegree() { return _indegree; }
+        int distance = std::numeric_limits<int>::max();
 
         // search parameters, are reset as needed
         Vertex* parent = nullptr;
@@ -106,6 +109,7 @@ public:
             v.parent = nullptr;
             v.discovered = false;
             v.processed = false;
+            v.distance = std::numeric_limits<int>::max();
         });
     }
 
