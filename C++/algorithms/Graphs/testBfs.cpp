@@ -37,14 +37,11 @@ void processEdge(typename Graph<Data>::Vertex& v, typename Graph<Data>::Vertex& 
 }
 
 void shortestPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Vertex* end, string& path) {
-    // catch when end isn't a descendent of start,
-    // or climbing the tree goes too far (past start)
-    if (!end || start->parent == end) {
-        return;
+    if (start != end && end->parent) {
+        shortestPath(start, end->parent, path);
+        path += " -> ";
     }
-
-    shortestPath(start, end->parent, path);
-    path += " " + end->name;
+    path += end->name;
 }
 
 int main() {
@@ -64,8 +61,8 @@ int main() {
     }
 
     shortestPath(start, end, path);
-    assert(path == " v1 v4 v6");
-    cout << "Shortest path from v1 to v6:" << path << endl;
+    cout << "Shortest path from v1 to v6: " << path << endl;
+    assert(path == "v1 -> v4 -> v6");
 
     return 0;
 }
