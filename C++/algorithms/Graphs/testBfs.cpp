@@ -3,7 +3,7 @@
 #include <map>
 #include <assert.h>
 #include "../../data-structures/Graph.h"
-#include "./testDefs.h"
+#include "helpers.h"
 
 using std::cout;
 using std::cin;
