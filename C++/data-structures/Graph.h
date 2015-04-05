@@ -93,7 +93,6 @@ public:
 public:
     /* algorithms - defined elsewhere */
     std::vector<Vertex*> topSort();
-    void initializeSearch();
     void bfs(std::string start,
              void(*processEarly)(Vertex& v) = nullptr,
              void(*process)(Vertex& v) = nullptr,
@@ -101,6 +100,14 @@ public:
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
+
+    void initializeSearch() {
+        std::for_each(begin(), end(), [] (Vertex& v) {
+            v.parent = nullptr;
+            v.discovered = false;
+            v.processed = false;
+        });
+    }
 
     Vertex& addVertex(std::string name, int weight = 1, Data* data = nullptr) {
         Vertex* v = new Vertex{name, weight, data};

@@ -9,16 +9,6 @@
 
 template <typename Data>
 void
-Graph<Data>::initializeSearch() {
-    std::for_each(begin(), end(), [] (Vertex& v) {
-        v.parent = nullptr;
-        v.discovered = false;
-        v.processed = false;
-    });
-}
-
-template <typename Data>
-void
 Graph<Data>::bfs(std::string start,
                  void(*processEarly)(Vertex& v),
                  void(*processLate)(Vertex& v),
