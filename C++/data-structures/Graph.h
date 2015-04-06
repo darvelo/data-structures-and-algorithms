@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <limits>
 
+static int max_int = std::numeric_limits<int>::max();
+
 template <typename Data>
 class Graph {
 public:
@@ -20,6 +22,8 @@ public:
                 << ", Indegree: " << _indegree
                 << ", Parent: " << (parent ? parent->name : "NONE")
                 << ", Distance: " << distance
+                << ", Entry Time: " << entryTime
+                << ", Exit Time: " << exitTime
                 << ", Edges:"
                 << std::endl;
             for (auto& v : edges) {
@@ -31,12 +35,14 @@ public:
         const std::string name;
         int weight = 1;
         int indegree() { return _indegree; }
-        int distance = std::numeric_limits<int>::max();
 
         // search parameters, are reset as needed
         Vertex* parent = nullptr;
         bool discovered = false;
         bool processed = false;
+        int distance = max_int;
+        int entryTime = max_int;
+        int exitTime = max_int;
 
         // user-supplied data
         Data* data = nullptr;
@@ -100,18 +106,23 @@ public:
              void(*processEarly)(Vertex& v) = nullptr,
              void(*processLate)(Vertex& v) = nullptr,
              void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
+    void dfs(std::string start,
+             void(*processEarly)(Vertex& v) = nullptr,
+             void(*processLate)(Vertex& v) = nullptr,
+             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
     void initializeSearch() {
+        time = 0;
         finished = false;
 
         std::for_each(begin(), end(), [] (Vertex& v) {
             v.parent = nullptr;
             v.discovered = false;
             v.processed = false;
-            v.distance = std::numeric_limits<int>::max();
+            v.distance = v.entryTime = v.exitTime = max_int;
         });
     }
 
@@ -200,9 +211,17 @@ public:
     size_t nedges() { return nEdges(); }
     const bool directed = false;
 
+    /* search variables */
+    // time counter represents hierarchy in dfs
+    int time = 0;
     // user can set `finished` to terminate search early
     bool finished = false;
 private:
+    void dfs(Vertex* v,
+             void(*processEarly)(Vertex& v) = nullptr,
+             void(*processLate)(Vertex& v) = nullptr,
+             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
+
     std::unordered_map<std::string, Vertex*> vertices;
     int nEdges = 0;
 };
@@ -210,5 +229,6 @@ private:
 /* algorithm definitions */
 #include "../algorithms/Graphs/topsort.h"
 #include "../algorithms/Graphs/bfs.h"
+#include "../algorithms/Graphs/dfs.h"
 
 #endif
