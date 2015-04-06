@@ -9,6 +9,8 @@ using std::cin;
 using std::endl;
 using std::string;
 
+Graph<Data> g(true);
+
 void processEarly(typename Graph<Data>::Vertex& v) {
     cout << v.name << " was processed early" << endl;
 }
@@ -30,7 +32,6 @@ void shortestPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Ver
 }
 
 int main() {
-    Graph<Data> g(true);
     readIntoGraph(g, "bfs_graph.txt");
     g.print();
     g.bfs("v1", processEarly, processLate, processEdge);

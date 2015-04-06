@@ -98,13 +98,15 @@ public:
     std::vector<Vertex*> topSort();
     void bfs(std::string start,
              void(*processEarly)(Vertex& v) = nullptr,
-             void(*process)(Vertex& v) = nullptr,
+             void(*processLate)(Vertex& v) = nullptr,
              void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
     void initializeSearch() {
+        finished = false;
+
         std::for_each(begin(), end(), [] (Vertex& v) {
             v.parent = nullptr;
             v.discovered = false;
@@ -197,6 +199,9 @@ public:
     size_t nvertices() { return vertices.size(); }
     size_t nedges() { return nEdges(); }
     const bool directed = false;
+
+    // user can set `finished` to terminate search early
+    bool finished = false;
 private:
     std::unordered_map<std::string, Vertex*> vertices;
     int nEdges = 0;

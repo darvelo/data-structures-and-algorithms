@@ -30,6 +30,10 @@ Graph<Data>::bfs(std::string start,
     q.push(v);
 
     while (!q.empty()) {
+        if (finished) {
+            return;
+        }
+
         v = q.front();
         q.pop();
 
@@ -38,9 +42,8 @@ Graph<Data>::bfs(std::string start,
         }
 
         v->processed = true;
-        bool directed = directed;
 
-        std::for_each(v->edges.begin(), v->edges.end(), [&q, directed, v, processEdge] (Vertex* w) {
+        for (auto w : v->edges) {
             if (processEdge && (!w->processed || directed)) {
                 processEdge(*v, *w);
             }
@@ -51,7 +54,7 @@ Graph<Data>::bfs(std::string start,
                 w->parent = v;
                 w->distance = v->distance + 1;
             }
-        });
+        }
 
         if (processLate) {
             processLate(*v);
