@@ -30,35 +30,29 @@ Graph<Data>::bfs(std::string start,
     q.push(v);
 
     while (!q.empty()) {
-        if (finished) {
-            return;
-        }
+        if (finished) return;
 
         v = q.front();
         q.pop();
 
-        if (processEarly) {
-            processEarly(*v);
+        if (processEarly) processEarly(*v);
+
+        for (auto w : v->edges) {
+            if (!w->discovered) {
+                q.push(w);
+                w->parent = v;
+                w->distance = v->distance + 1;
+                if (processEdge) processEdge(*v, *w);
+                w->discovered = true;
+            } else if ((!w->processed && v->parent != w) || directed) {
+                if (processEdge) processEdge(*v, *w);
+            }
+
+            if (finished) return;
         }
 
         v->processed = true;
-
-        for (auto w : v->edges) {
-            if (processEdge && (!w->processed || directed)) {
-                processEdge(*v, *w);
-            }
-
-            if (!w->discovered) {
-                q.push(w);
-                w->discovered = true;
-                w->parent = v;
-                w->distance = v->distance + 1;
-            }
-        }
-
-        if (processLate) {
-            processLate(*v);
-        }
+        if (processLate) processLate(*v);
     }
 }
 
