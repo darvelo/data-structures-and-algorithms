@@ -4,15 +4,16 @@
 #include <queue>
 #include <string>
 #include <algorithm>
+#include <functional>
 #include "../../data-structures/Graph.h"
 #include "../../utils.h"
 
 template <typename Data>
 void
 Graph<Data>::bfs(std::string start,
-                 void(*processEarly)(Vertex& v),
-                 void(*processLate)(Vertex& v),
-                 void(*processEdge)(Vertex& v, Vertex& w))
+                 std::function<void (Vertex&)> processEarly,
+                 std::function<void (Vertex&)> processLate,
+                 std::function<void (Vertex&, Vertex&)> processEdge)
 {
     auto itr = getVertex(start);
 

@@ -2,8 +2,8 @@
 #define GRAPH_H
 
 #include <iostream>
-#include <queue>
 #include <vector>
+#include <functional>
 #include <forward_list>
 #include <unordered_map>
 #include <algorithm>
@@ -112,13 +112,13 @@ public:
     /* algorithms - defined elsewhere */
     std::vector<Vertex*> topSort();
     void bfs(std::string start,
-             void(*processEarly)(Vertex& v) = nullptr,
-             void(*processLate)(Vertex& v) = nullptr,
-             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
     void dfs(std::string start,
-             void(*processEarly)(Vertex& v) = nullptr,
-             void(*processLate)(Vertex& v) = nullptr,
-             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
 
     /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
@@ -236,9 +236,9 @@ public:
     bool finished = false;
 private:
     void dfs(Vertex* v,
-             void(*processEarly)(Vertex& v) = nullptr,
-             void(*processLate)(Vertex& v) = nullptr,
-             void(*processEdge)(Vertex& v, Vertex& w) = nullptr);
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
 
     std::unordered_map<std::string, Vertex*> vertices;
     int nEdges = 0;
