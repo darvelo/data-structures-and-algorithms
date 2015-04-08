@@ -9,20 +9,11 @@
 
 template <typename Data>
 void
-Graph<Data>::bfs(std::string start,
+Graph<Data>::bfs(Vertex* v,
                  std::function<void (Vertex&)> processEarly,
                  std::function<void (Vertex&)> processLate,
                  std::function<void (Vertex&, Vertex&)> processEdge)
 {
-    auto itr = getVertex(start);
-
-    if (itr == end()) {
-        throw CustomException("Can't start BFS on non-existent vertex!");
-    }
-
-    initializeSearch();
-
-    Vertex* v = &*itr;
     v->discovered = true;
     v->distance = 0;
 
@@ -54,6 +45,23 @@ Graph<Data>::bfs(std::string start,
         v->processed = true;
         if (processLate) processLate(*v);
     }
+}
+
+template <typename Data>
+void
+Graph<Data>::bfs(std::string start,
+                 std::function<void (Vertex&)> processEarly,
+                 std::function<void (Vertex&)> processLate,
+                 std::function<void (Vertex&, Vertex&)> processEdge)
+{
+    auto itr = getVertex(start);
+
+    if (itr == end()) {
+        throw CustomException("Can't start BFS on non-existent vertex!");
+    }
+
+    Vertex* v = &*itr;
+    bfs(v, processEarly, processLate, processEdge);
 }
 
 #endif

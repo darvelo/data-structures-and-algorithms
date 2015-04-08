@@ -31,6 +31,7 @@ void findPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Vertex*
 
 int main() {
     readIntoGraph(g, "bfs_graph.txt");
+    g.initializeSearch();
     g.print();
     g.dfs("v1", processEarly, processLate, processEdge);
     cout << endl;

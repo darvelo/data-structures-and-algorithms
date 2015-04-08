@@ -51,8 +51,6 @@ Graph<Data>::dfs(std::string start,
         throw CustomException("Can't start DFS on non-existent vertex!");
     }
 
-    initializeSearch();
-
     Vertex* v = &*itr;
     v->distance = 0;
 

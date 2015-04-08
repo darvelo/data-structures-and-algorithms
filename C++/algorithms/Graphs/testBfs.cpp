@@ -32,6 +32,7 @@ void shortestPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Ver
 
 int main() {
     readIntoGraph(g, "bfs_graph.txt");
+    g.initializeSearch();
     g.print();
     g.bfs("v1", processEarly, processLate, processEdge);
     cout << endl;
