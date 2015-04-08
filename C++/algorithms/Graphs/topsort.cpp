@@ -11,11 +11,13 @@ using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-void processLate (stack<Graph<Data>::Vertex*>* sorted, Graph<Data>::Vertex& v) {
+typedef Graph<Data>::Vertex Vertex;
+
+void processLate (stack<Vertex*>* sorted, Vertex& v) {
     sorted->push(&v);
 }
 
-void processEdge (Graph<Data>* g, Graph<Data>::Vertex& v, Graph<Data>::Vertex& w) {
+void processEdge (Graph<Data>* g, Vertex& v, Vertex& w) {
     auto type = g->edgeClassification(v, w);
 
     if (type == g->BACK_EDGE) {
@@ -27,7 +29,7 @@ void processEdge (Graph<Data>* g, Graph<Data>::Vertex& v, Graph<Data>::Vertex& w
 int main() {
     bool directed = true;
     Graph<Data> g(directed);
-    stack<Graph<Data>::Vertex*> sorted;
+    stack<Vertex*> sorted;
 
     readIntoGraph(g, "input/topsort_graph.txt");
 

@@ -7,21 +7,21 @@ using std::cout;
 using std::endl;
 using std::string;
 
-Graph<Data> g(true);
+typedef Graph<Data>::Vertex Vertex;
 
-void processEarly(typename Graph<Data>::Vertex& v) {
+void processEarly(Vertex& v) {
     cout << v.name << " was processed early" << endl;
 }
 
-void processLate(typename Graph<Data>::Vertex& v) {
+void processLate(Vertex& v) {
     cout << v.name << " was processed late" << endl;
 }
 
-void processEdge(typename Graph<Data>::Vertex& v, typename Graph<Data>::Vertex& w) {
+void processEdge(Vertex& v, Vertex& w) {
     cout << v.name << " edge to " << w.name << endl;
 }
 
-void findPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Vertex* end, string& path) {
+void findPath(Vertex* start, Vertex* end, string& path) {
     if (start != end && end->parent) {
         findPath(start, end->parent, path);
         path += " -> ";
@@ -30,7 +30,11 @@ void findPath(typename Graph<Data>::Vertex* start, typename Graph<Data>::Vertex*
 }
 
 int main() {
+    bool directed = true;
+    Graph<Data> g(directed);
+
     readIntoGraph(g, "input/dfs_graph.txt");
+
     g.initializeSearch();
     g.print();
     g.dfs("v1", processEarly, processLate, processEdge);
