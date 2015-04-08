@@ -29,7 +29,7 @@ int main() {
     Graph<Data> g(directed);
     stack<Graph<Data>::Vertex*> sorted;
 
-    readIntoGraph(g, "topsort_graph.txt");
+    readIntoGraph(g, "input/topsort_graph.txt");
 
     auto pLate = bind(processLate, &sorted, _1);
     auto pEdge = bind(processEdge, &g, _1, _2);
