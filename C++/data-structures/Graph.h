@@ -14,6 +14,15 @@ static int max_int = std::numeric_limits<int>::max();
 template <typename Data>
 class Graph {
 public:
+    /* constants */
+    enum edge_t {
+        TREE_EDGE,
+        BACK_EDGE,
+        FORWARD_EDGE,
+        CROSS_EDGE,
+        UNCLASSIFIED_EDGE
+    };
+
     class Vertex {
     public:
         void print(std::ostream& out = std::cout) {
@@ -202,6 +211,15 @@ public:
             vec.print(out);
         }
         out << std::endl;
+    }
+
+    static Graph::edge_t edgeClassification(Vertex& v, Vertex& w) {
+        if (w.parent == &v) return Graph::TREE_EDGE;
+        if (w.discovered && !w.processed) return Graph::BACK_EDGE;
+        if (w.processed && w.entryTime > v.entryTime) return Graph::FORWARD_EDGE;
+        if (w.processed && w.entryTime < v.entryTime) return Graph::CROSS_EDGE;
+        // warn
+        return Graph::UNCLASSIFIED_EDGE;
     }
 
     iterator begin() { return iterator(vertices.begin()); }
