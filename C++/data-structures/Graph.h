@@ -2,7 +2,6 @@
 #define GRAPH_H
 
 #include <iostream>
-#include <vector>
 #include <functional>
 #include <forward_list>
 #include <unordered_map>
@@ -23,12 +22,22 @@ public:
         UNCLASSIFIED_EDGE
     };
 
+    class Vertex;
+
+    static Graph::edge_t edgeClassification(Vertex& v, Vertex& w) {
+        if (w.parent == &v) return Graph::TREE_EDGE;
+        if (w.discovered && !w.processed) return Graph::BACK_EDGE;
+        if (w.processed && w.entryTime > v.entryTime) return Graph::FORWARD_EDGE;
+        if (w.processed && w.entryTime < v.entryTime) return Graph::CROSS_EDGE;
+        // warn
+        return Graph::UNCLASSIFIED_EDGE;
+    }
+
     class Vertex {
     public:
         void print(std::ostream& out = std::cout) {
             out << "Vertex: " << name
                 << ", Weight: " << weight
-                << ", Indegree: " << _indegree
                 << ", Parent: " << (parent ? parent->name : "NONE")
                 << ", Distance: " << distance
                 << ", Entry Time: " << entryTime
@@ -43,9 +52,8 @@ public:
         // inherent properties
         const std::string name;
         int weight = 1;
-        int indegree() { return _indegree; }
 
-        // search parameters, are reset as needed
+        // search results, are reset as needed
         Vertex* parent = nullptr;
         bool discovered = false;
         bool processed = false;
@@ -60,7 +68,6 @@ public:
             : name(_name), weight(_weight), data(_data) { }
 
         std::forward_list<Vertex*> edges;
-        int _indegree = 0;
         friend Graph<Data>;
     };
 
@@ -109,30 +116,18 @@ public:
         friend Graph<Data>;
     };
 public:
-    /* algorithms - defined elsewhere */
-    std::vector<Vertex*> topSort();
-    void bfs(std::string start,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&, Vertex&)> = nullptr);
-    void dfs(std::string start,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&, Vertex&)> = nullptr);
-
-    /* implementation */
     Graph(bool _directed = false) : directed(_directed) { }
 
     void initializeSearch() {
         time = 0;
         finished = false;
 
-        std::for_each(begin(), end(), [] (Vertex& v) {
+        for (auto& v : *this) {
             v.parent = nullptr;
             v.discovered = false;
             v.processed = false;
             v.distance = v.entryTime = v.exitTime = max_int;
-        });
+        }
     }
 
     Vertex& addVertex(std::string name, int weight = 1, Data* data = nullptr) {
@@ -181,7 +176,6 @@ public:
 
         if (!exists) {
             ++nEdges;
-            ++(*sink)._indegree;
             srcEdges.push_front(&*sink);
 
             if (!directed) {
@@ -204,6 +198,19 @@ public:
         return addEdge(from, to.name);
     }
 
+    void bfs(std::string start,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
+    void dfs(std::string start,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
+    void dfs(Vertex* v,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
+
     void print(std::ostream& out = std::cout) {
         out << "Printing Graph..." << std::endl;
         out << "Size: " << nvertices() << std::endl;
@@ -211,15 +218,6 @@ public:
             vec.print(out);
         }
         out << std::endl;
-    }
-
-    static Graph::edge_t edgeClassification(Vertex& v, Vertex& w) {
-        if (w.parent == &v) return Graph::TREE_EDGE;
-        if (w.discovered && !w.processed) return Graph::BACK_EDGE;
-        if (w.processed && w.entryTime > v.entryTime) return Graph::FORWARD_EDGE;
-        if (w.processed && w.entryTime < v.entryTime) return Graph::CROSS_EDGE;
-        // warn
-        return Graph::UNCLASSIFIED_EDGE;
     }
 
     iterator begin() { return iterator(vertices.begin()); }
@@ -235,17 +233,11 @@ public:
     // user can set `finished` to terminate search early
     bool finished = false;
 private:
-    void dfs(Vertex* v,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&)> = nullptr,
-             std::function<void (Vertex&, Vertex&)> = nullptr);
-
     std::unordered_map<std::string, Vertex*> vertices;
     int nEdges = 0;
 };
 
-/* algorithm definitions */
-#include "../algorithms/Graphs/topsort.h"
+/* search algorithm definitions */
 #include "../algorithms/Graphs/bfs.h"
 #include "../algorithms/Graphs/dfs.h"
 

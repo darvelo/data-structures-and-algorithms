@@ -1,11 +1,9 @@
 #include <iostream>
 #include <string>
-#include <assert.h>
 #include "../../data-structures/Graph.h"
 #include "helpers.h"
 
 using std::cout;
-using std::cin;
 using std::endl;
 using std::string;
 
