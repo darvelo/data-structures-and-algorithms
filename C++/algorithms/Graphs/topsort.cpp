@@ -8,21 +8,22 @@ using std::cout;
 using std::endl;
 using std::stack;
 using std::bind;
+using std::ref;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
 typedef Graph<Data>::Vertex Vertex;
 
-void processLate (stack<Vertex*>* sorted, Vertex& v) {
-    sorted->push(&v);
+void processLate (stack<Vertex*>& sorted, Vertex& v) {
+    sorted.push(&v);
 }
 
-void processEdge (Graph<Data>* g, Vertex& v, Vertex& w) {
-    auto type = g->edgeClassification(v, w);
+void processEdge (Graph<Data>& g, Vertex& v, Vertex& w) {
+    auto type = g.edgeClassification(v, w);
 
-    if (type == g->BACK_EDGE) {
+    if (type == g.BACK_EDGE) {
         cout << "Warning: directed cycle found, not a DAG." << endl;
-        g->finished = true;
+        g.finished = true;
     }
 }
 
@@ -33,8 +34,8 @@ int main() {
 
     readIntoGraph(g, "input/topsort_graph.txt");
 
-    auto pLate = bind(processLate, &sorted, _1);
-    auto pEdge = bind(processEdge, &g, _1, _2);
+    auto pLate = bind(processLate, ref(sorted), _1);
+    auto pEdge = bind(processEdge, ref(g), _1, _2);
 
     if (!g.directed) {
         throw CustomException("Can't do topological sort on an undirected graph!");
