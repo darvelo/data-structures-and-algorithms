@@ -13,7 +13,7 @@ struct Data {
     std::string surname;
 };
 
-struct VectorRelationship {
+struct VertexRelationship {
     std::string name;
     std::vector<std::string> edges;
 };
@@ -28,7 +28,7 @@ readIntoGraph(Graph<Data>& g, std::string filename) {
     std::ifstream f(filename);
     std::string line;
     std::smatch match;
-    std::vector<VectorRelationship> vectors;
+    std::vector<VertexRelationship> vertices;
     std::vector<std::string> empty;
 
     while (std::getline(f, line)) {
@@ -46,15 +46,15 @@ readIntoGraph(Graph<Data>& g, std::string filename) {
             std::stringstream edgeStrs(match[3]);
             std::istream_iterator<std::string> begin(edgeStrs);
             std::istream_iterator<std::string> end;
-            vectors.push_back({ name, {begin, end} });
+            vertices.push_back({ name, {begin, end} });
         }
     }
 
-    auto begin = vectors.begin();
-    auto end = vectors.end();
+    auto begin = vertices.begin();
+    auto end = vertices.end();
 
     while (begin != end) {
-        VectorRelationship& r = *begin;
+        VertexRelationship& r = *begin;
         auto itr = g.getVertex(r.name);
 
         if (itr != g.end()) {
