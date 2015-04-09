@@ -33,6 +33,10 @@ public:
         return Graph::UNCLASSIFIED_EDGE;
     }
 
+    static Graph::edge_t edgeClassification(Vertex* v, Vertex* w) {
+        return edgeClassification(*v, *w);
+    }
+
     class Vertex {
     public:
         void print(std::ostream& out = std::cout) {
