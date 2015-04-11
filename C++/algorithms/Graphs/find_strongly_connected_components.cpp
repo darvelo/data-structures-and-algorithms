@@ -14,10 +14,11 @@ using std::ref;
 using std::bind;
 using namespace std::placeholders;
 
-typedef Graph<Data>::Vertex Vertex;
-
+template <typename GraphT>
 struct ComponentsResult {
-    ComponentsResult(Graph<Data>& _g) : g(_g) {
+    using Vertex = typename GraphT::Vertex;
+
+    ComponentsResult(GraphT& _g) : g(_g) {
         for (auto& v : g) {
             low[&v] = &v;
             component[&v] = -1;
@@ -69,7 +70,7 @@ struct ComponentsResult {
     }
 
     int componentsFound = 0;
-    Graph<Data>& g;
+    GraphT& g;
     stack<Vertex*> active;
     // oldest vertex surely in component of v
     unordered_map<Vertex*, Vertex*> low;
@@ -77,19 +78,20 @@ struct ComponentsResult {
     unordered_map<Vertex*, int> component;
 };
 
-unordered_map<Vertex*, int>
-strongly_connected_components(Graph<Data>& g) {
+template <typename GraphT>
+unordered_map<typename GraphT::Vertex*, int>
+strongly_connected_components(GraphT& g) {
     if (!g.directed) {
         throw CustomException("Finding strongly-connected components requires a directed graph!");
     }
 
     g.initializeSearch();
 
-    ComponentsResult result(g);
+    ComponentsResult<GraphT> result(g);
 
-    auto pEarly = bind(&ComponentsResult::processEarly, ref(result), _1);
-    auto pLate = bind(&ComponentsResult::processLate, ref(result), _1);
-    auto pEdge = bind(&ComponentsResult::processEdge, ref(result), _1, _2);
+    auto pEarly = bind(&ComponentsResult<GraphT>::processEarly, ref(result), _1);
+    auto pLate = bind(&ComponentsResult<GraphT>::processLate, ref(result), _1);
+    auto pEdge = bind(&ComponentsResult<GraphT>::processEdge, ref(result), _1, _2);
 
     for (auto& v : g) {
         if (!v.discovered) {
@@ -108,7 +110,7 @@ int main() {
     auto result = strongly_connected_components(g);
     g.print();
 
-    for (std::pair<Vertex*, int> pr : result) {
+    for (auto pr : result) {
         cout << pr.first->name << " -> " << pr.second << endl;
     }
 
