@@ -11,10 +11,11 @@ using std::bind;
 using std::ref;
 using namespace std::placeholders;
 
-typedef Graph<Data>::Vertex Vertex;
-
+template <typename GraphT>
 struct TopSortResult {
-    TopSortResult(Graph<Data>& _g) : g(_g) { };
+    using Vertex = typename GraphT::Vertex;
+
+    TopSortResult(GraphT& _g) : g(_g) { };
 
     void processVertexLate (Vertex& v) {
         result.push(&v);
@@ -30,29 +31,37 @@ struct TopSortResult {
     }
 
     stack<Vertex*> result;
-    Graph<Data>& g;
+    GraphT& g;
 };
 
-int main() {
-    bool directed = true;
-    Graph<Data> g(directed);
-
+template <typename GraphT>
+stack<typename GraphT::Vertex*>
+topological_sort(GraphT& g) {
     if (!g.directed) {
         throw CustomException("Can't do topological sort on an undirected graph!");
     }
 
-    readIntoGraph(g, "input/topsort_graph.txt");
+    g.initializeSearch();
 
-    TopSortResult t(g);
-    auto& result = t.result;
-    auto pLate = bind(&TopSortResult::processVertexLate, ref(t), _1);
-    auto pEdge = bind(&TopSortResult::processEdge, ref(t), _1, _2);
+    TopSortResult<GraphT> t(g);
+    auto pLate = bind(&TopSortResult<GraphT>::processVertexLate, ref(t), _1);
+    auto pEdge = bind(&TopSortResult<GraphT>::processEdge, ref(t), _1, _2);
 
     for (auto& v : g) {
         if (!v.discovered) {
             g.dfs(&v, nullptr, pLate, pEdge);
         }
     }
+
+    return t.result;
+}
+
+int main() {
+    bool directed = true;
+    Graph<Data> g(directed);
+    readIntoGraph(g, "input/topsort_graph.txt");
+
+    auto result = topological_sort(g);
 
     cout << "Topological Sort: ";
 
