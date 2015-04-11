@@ -1,21 +1,32 @@
 #include <iostream>
+#include <set>
 #include <unordered_map>
+#include <vector>
 #include <functional>
 #include "../../data-structures/Graph.h"
 #include "helpers.h"
 
 using std::cout;
 using std::endl;
+using std::set;
 using std::unordered_map;
 using std::function;
 using std::bind;
 using std::ref;
 using namespace std::placeholders;
 
-typedef Graph<Data>::Vertex Vertex;
+template <typename T>
+struct vertexNameCompare {
+    bool operator()(T* v, T* w) const {
+        return v->name < w->name;
+    }
+};
 
+template <typename GraphT>
 struct ArticulationResult {
-    ArticulationResult(Graph<Data>& _g) : g(_g) { };
+    using Vertex = typename GraphT::Vertex;
+
+    ArticulationResult(GraphT& _g) : g(_g) { };
 
     void processEarly(Vertex& v) {
         reachable_ancestor[&v] = &v;
@@ -26,6 +37,7 @@ struct ArticulationResult {
         if (!v.parent) {
             if (tree_outdegree[&v] > 1) {
                 cout << "root articulation vertex: " << v.name << endl;
+                root.insert(&v);
             }
             return;
         }
@@ -36,13 +48,16 @@ struct ArticulationResult {
         if (!isParentRoot) {
             if (reachable_ancestor[&v] == v.parent) {
                 cout << "parent articulation vertex: " << v.parent->name << " -> " << v.name << endl;
+                parent.insert(v.parent);
             }
 
             if (reachable_ancestor[&v] == &v) {
                 cout << "bridge articulation vertex (parent): " << v.parent->name << " -> " << v.name << endl;
+                bridge.insert(v.parent);
 
                 if (tree_outdegree[&v] > 0) {
                     cout << "bridge articulation vertex: " << v.name << endl;
+                    bridge.insert(&v);
                 }
             }
         }
@@ -71,36 +86,67 @@ struct ArticulationResult {
         }
     }
 
-    Graph<Data>& g;
+    GraphT& g;
     unordered_map<Vertex*, Vertex*> reachable_ancestor;
     unordered_map<Vertex*, int> tree_outdegree;
+    // types of articulation vertices
+    set<Vertex*, vertexNameCompare<Vertex>> root;
+    set<Vertex*, vertexNameCompare<Vertex>> bridge;
+    set<Vertex*, vertexNameCompare<Vertex>> parent;
 };
+
+template <typename GraphT>
+ArticulationResult<GraphT>
+find_articulation_vertices(GraphT& g) {
+    g.initializeSearch();
+
+    ArticulationResult<GraphT> result(g);
+    auto pEarly = bind(&ArticulationResult<GraphT>::processEarly, ref(result), _1);
+    auto pLate = bind(&ArticulationResult<GraphT>::processLate, ref(result), _1);
+    auto pEdge = bind(&ArticulationResult<GraphT>::processEdge, ref(result), _1, _2);
+
+    g.dfs("v1", pEarly, pLate, pEdge);
+
+    return result;
+}
 
 int main() {
     bool directed = true;
     Graph<Data> g(directed);
     readIntoGraph(g, "input/articulation_verticies_graph.txt");
 
-    ArticulationResult a(g);
-    auto pEarly = bind(&ArticulationResult::processEarly, ref(a), _1);
-    auto pLate = bind(&ArticulationResult::processLate, ref(a), _1);
-    auto pEdge = bind(&ArticulationResult::processEdge, ref(a), _1, _2);
-
-    g.dfs("v1", pEarly, pLate, pEdge);
-    cout << endl;
+    auto result = find_articulation_vertices(g);
+    g.print();
 
     cout << "Reachable Ancestors: " << endl;
-    for (std::pair<Vertex*, Vertex*> pr : a.reachable_ancestor) {
+    for (auto pr : result.reachable_ancestor) {
         cout << pr.first->name << " -> " << pr.second->name << endl;
     }
     cout << endl;
 
     cout << "Outdegrees: " << endl;
-    for (std::pair<Vertex*, int> pr : a.tree_outdegree) {
+    for (auto pr : result.tree_outdegree) {
         cout << pr.first->name << " -> " << pr.second << endl;
     }
     cout << endl;
 
-    g.print();
+    cout << "Root Articulation Vertex:" << endl;
+    for (auto root : result.root) {
+        cout << root->name << endl;
+    }
+    cout << endl;
+
+    cout << "Parent Articulation Vertices:" << endl;
+    for (auto parent : result.parent) {
+        cout << parent->name << endl;
+    }
+    cout << endl;
+
+    cout << "Bridge Articulation Vertices:" << endl;
+    for (auto bridgeV : result.bridge) {
+        cout << bridgeV->name << endl;
+    }
+    cout << endl;
+
     return 0;
 }
