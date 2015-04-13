@@ -77,7 +77,7 @@ addVertices(Graph<Data>& g, std::string filename, std::vector<VertexRelationship
     std::vector<std::string> empty;
 
     while (std::getline(file, line)) {
-        if (line.empty() || line.size() == 1) {
+        if (line.empty() || line.size() == 1 || line[0] == '#') {
             continue;
         }
 
