@@ -21,20 +21,20 @@ struct ComponentsResult {
     ComponentsResult(GraphT& _g) : g(_g) {
         for (auto& v : g) {
             low[&v] = &v;
-            component[&v] = -1;
+            components[&v] = -1;
         }
     };
 
     void pop_component(Vertex& v) {
-        componentsFound++;
+        ++componentsFound;
 
         while (active.top() != &v) {
-            component[active.top()] = componentsFound;
+            components[active.top()] = componentsFound;
             active.pop();
         }
 
         // completely assign the component by also processing v
-        component[active.top()] = componentsFound;
+        components[active.top()] = componentsFound;
         active.pop();
     }
 
@@ -63,7 +63,7 @@ struct ComponentsResult {
         }
 
         if (type == g.CROSS_EDGE) {
-            if (component[&w] == -1 && w.entryTime < low[&v]->entryTime) {
+            if (components[&w] == -1 && w.entryTime < low[&v]->entryTime) {
                 low[&v] = &w;
             }
         }
@@ -75,7 +75,7 @@ struct ComponentsResult {
     // oldest vertex surely in component of v
     unordered_map<Vertex*, Vertex*> low;
     // strong component number for each vertex
-    unordered_map<Vertex*, int> component;
+    unordered_map<Vertex*, int> components;
 };
 
 template <typename GraphT>
@@ -99,13 +99,13 @@ strongly_connected_components(GraphT& g) {
         }
     }
 
-    return result.component;
+    return result.components;
 }
 
 int main() {
     bool directed = true;
     Graph<Data> g(directed);
-    readIntoGraph(g, "./input/strongly_connected_components_graph.txt");
+    readIntoGraph(g, "./input/connected_components_graph.txt");
 
     auto result = strongly_connected_components(g);
     g.print();
