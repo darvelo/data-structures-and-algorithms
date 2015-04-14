@@ -113,7 +113,7 @@ find_articulation_vertices(GraphT& g) {
 int main() {
     bool directed = true;
     Graph<Data> g(directed);
-    readIntoGraph(g, "input/articulation_verticies_graph.txt");
+    readIntoGraph(g, "input/articulation_vertices_graph.txt");
 
     auto result = find_articulation_vertices(g);
     g.print();

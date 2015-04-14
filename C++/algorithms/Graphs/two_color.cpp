@@ -29,7 +29,7 @@ struct TwoColorResult {
 
     void processEdge(Vertex& v, Vertex& w) {
         if (colors[&v] == colors[&w]) {
-            cout << "Warning: Graph is not bipartite due to"
+            cout << "Warning: Graph is not bipartite due to "
                  << "(" << v.name << "," << w.name << ")" << endl;
         }
 

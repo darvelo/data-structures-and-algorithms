@@ -35,25 +35,31 @@ public:
         return edgeClassification(*v, *w);
     }
 
+    struct Edge {
+        Edge(Vertex* _w, int _weight)
+            : w(_w), weight(_weight) { };
+        Vertex* w;
+        int weight = 1;
+    };
+
     class Vertex {
     public:
         void print(std::ostream& out = std::cout) {
             out << "Vertex: " << name
-                << ", Weight: " << weight
                 << ", Parent: " << (parent ? parent->name : "NONE")
                 << ", Distance: " << distance
                 << ", Entry Time: " << entryTime
                 << ", Exit Time: " << exitTime
                 << ", Edges:"
                 << std::endl;
-            for (auto& v : edges) {
-                out << "    \"" << v->name << "\" " << v->weight << std::endl;
+            for (auto& e : edges) {
+                out << "    \"" << e.w->name << "\" " << e.weight << std::endl;
             }
         }
 
         // inherent properties
         const std::string name;
-        int weight = 1;
+        std::forward_list<Edge> edges;
 
         // search results, are reset as needed
         Vertex* parent = nullptr;
@@ -66,10 +72,8 @@ public:
         // user-supplied data
         Data* data = nullptr;
     private:
-        explicit Vertex(std::string _name, int _weight = 1, Data* _data = nullptr)
-            : name(_name), weight(_weight), data(_data) { }
-
-        std::forward_list<Vertex*> edges;
+        explicit Vertex(std::string _name, Data* _data = nullptr)
+            : name(_name), data(_data) { }
         friend Graph<Data>;
     };
 
@@ -132,8 +136,8 @@ public:
         }
     }
 
-    Vertex& addVertex(std::string name, int weight = 1, Data* data = nullptr) {
-        Vertex* v = new Vertex{name, weight, data};
+    Vertex& addVertex(std::string name, Data* data = nullptr) {
+        Vertex* v = new Vertex{name, data};
         auto result = vertices.insert({ name, v });
 
         // if insert failed, map already had such a key.
@@ -156,7 +160,7 @@ public:
         return iterator(iter);
     }
 
-    bool addEdge(std::string from, std::string to) {
+    bool addEdge(std::string from, std::string to, int weight = 1) {
         iterator source = getVertex(from);
         iterator theEnd = end();
 
@@ -172,16 +176,16 @@ public:
 
         auto& srcEdges = (*source).edges;
 
-        bool exists = std::any_of(srcEdges.begin(), srcEdges.end(), [&to] (Vertex* v) {
-            return v->name == to;
+        bool exists = std::any_of(srcEdges.begin(), srcEdges.end(), [&to] (Edge& e) {
+            return e.w->name == to;
         });
 
         if (!exists) {
             ++nEdges;
-            srcEdges.push_front(&*sink);
+            srcEdges.push_front({ &*sink, weight });
 
             if (!directed) {
-                addEdge(to, from);
+                addEdge(to, from, weight);
             }
         }
 

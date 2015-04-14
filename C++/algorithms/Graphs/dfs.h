@@ -20,7 +20,8 @@ Graph<Data>::dfs(Vertex* v,
 
     if (processEarly) processEarly(*v);
 
-    for (auto w : v->edges) {
+    for (auto& e : v->edges) {
+        auto w = e.w;
         if (!w->discovered) {
             w->parent = v;
             w->distance = v->distance + 1;

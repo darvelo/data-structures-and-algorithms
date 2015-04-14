@@ -28,7 +28,8 @@ Graph<Data>::bfs(Vertex* v,
 
         if (processEarly) processEarly(*v);
 
-        for (auto w : v->edges) {
+        for (auto& e : v->edges) {
+            auto w = e.w;
             if (!w->discovered) {
                 q.push(w);
                 w->parent = v;
