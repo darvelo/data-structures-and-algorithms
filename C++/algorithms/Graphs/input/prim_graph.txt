@@ -1,0 +1,12 @@
+A 5 B
+A 7 C
+A 12 D
+B 9 C
+B 7 E
+C 4 D E
+C 3 F
+D 7 F
+E 2 F
+E 5 G
+F 2 G
+G
