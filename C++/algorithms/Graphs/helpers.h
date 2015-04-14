@@ -33,6 +33,7 @@ struct Data {
 // creates four vertices: v1, v2, v3, and v4.
 // v1 points to v2 and v3; each edge has a weight of 1.
 // v2 and v3 also point to v1 with edge weight 1 in an undirected graph.
+// v1 also points to v4, with an edge weight of 8.
 // v2 doesn't point to anything unless the graph is undirected.
 // v3 points to v2 with edge weight 10,
 // and v4 points to v1 with edge weight 4.
@@ -45,7 +46,7 @@ struct Data {
 //       *  naming an edge vertex that is not defined elsewhere on its own line as the first word.
 //       *  defining an edge that was previously defined
 //       *  defining edges on two vertices with different weights on an undirected graph.
-//       *  for some reason adding an edge to the graph does not work
+//       *  if for some reason adding an edge to the graph does not work
 std::string vertex_string = "^([a-zA-Z0-9]+)(?:\\s+([0-9]+)\\s+([\\sa-zA-Z0-9]+))?\\s*$";
 std::regex vertex_regex(vertex_string);
 
