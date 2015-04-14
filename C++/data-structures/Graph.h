@@ -210,11 +210,19 @@ public:
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&, Vertex&)> = nullptr);
+    void bfs(Vertex& v,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
     void dfs(std::string start,
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&, Vertex&)> = nullptr);
     void dfs(Vertex* v,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&)> = nullptr,
+             std::function<void (Vertex&, Vertex&)> = nullptr);
+    void dfs(Vertex& v,
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&)> = nullptr,
              std::function<void (Vertex&, Vertex&)> = nullptr);

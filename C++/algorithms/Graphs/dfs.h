@@ -40,6 +40,16 @@ Graph<Data>::dfs(Vertex* v,
 
 template <typename Data>
 void
+Graph<Data>::dfs(Vertex& v,
+                 std::function<void (Graph<Data>::Vertex&)> processEarly,
+                 std::function<void (Graph<Data>::Vertex&)> processLate,
+                 std::function<void (Graph<Data>::Vertex&, Graph<Data>::Vertex&)> processEdge)
+{
+    dfs(&v, processEarly, processLate, processEdge);
+}
+
+template <typename Data>
+void
 Graph<Data>::dfs(std::string start,
                  std::function<void (Graph<Data>::Vertex&)> processEarly,
                  std::function<void (Graph<Data>::Vertex&)> processLate,

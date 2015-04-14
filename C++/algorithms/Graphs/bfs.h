@@ -49,6 +49,16 @@ Graph<Data>::bfs(Vertex* v,
 
 template <typename Data>
 void
+Graph<Data>::bfs(Vertex& v,
+                 std::function<void (Vertex&)> processEarly,
+                 std::function<void (Vertex&)> processLate,
+                 std::function<void (Vertex&, Vertex&)> processEdge)
+{
+    bfs(&v, processEarly, processLate, processEdge);
+}
+
+template <typename Data>
+void
 Graph<Data>::bfs(std::string start,
                  std::function<void (Vertex&)> processEarly,
                  std::function<void (Vertex&)> processLate,
