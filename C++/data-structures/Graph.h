@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <limits>
 
-static int max_int = std::numeric_limits<int>::max();
-
 template <typename Data>
 class Graph {
 public:
@@ -61,9 +59,9 @@ public:
         Vertex* parent = nullptr;
         bool discovered = false;
         bool processed = false;
-        int distance = max_int;
-        int entryTime = max_int;
-        int exitTime = max_int;
+        int distance = std::numeric_limits<int>::max();
+        int entryTime = std::numeric_limits<int>::max();
+        int exitTime = std::numeric_limits<int>::max();
 
         // user-supplied data
         Data* data = nullptr;
@@ -130,7 +128,7 @@ public:
             v.parent = nullptr;
             v.discovered = false;
             v.processed = false;
-            v.distance = v.entryTime = v.exitTime = max_int;
+            v.distance = v.entryTime = v.exitTime = std::numeric_limits<int>::max();
         }
     }
 
