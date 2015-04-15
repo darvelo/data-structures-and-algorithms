@@ -2,9 +2,9 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "../../data-structures/Graph.h"
-#include "helpers.h"
-#include "error_types.h"
+#include "../../../data-structures/Graph.h"
+#include "../helpers.h"
+#include "../error_types.h"
 
 using std::cout;
 using std::endl;
