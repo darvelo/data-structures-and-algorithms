@@ -242,7 +242,7 @@ public:
     iterator end()   { return iterator(vertices.end());   }
 
     size_t nvertices() { return vertices.size(); }
-    size_t nedges() { return nEdges(); }
+    size_t nedges() { return nEdges; }
     const bool directed = false;
 
     /* search variables */
