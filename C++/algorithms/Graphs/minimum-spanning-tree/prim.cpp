@@ -14,6 +14,7 @@ template <typename GraphT>
 void
 prim(GraphT& g, typename GraphT::Vertex& start) {
     using Vertex = typename GraphT::Vertex;
+
     g.initializeSearch();
 
     unordered_map<Vertex*, bool> intree;
@@ -62,7 +63,7 @@ prim(GraphT& g, string start) {
 int main() {
     bool directed = false;
     Graph<Data> g(directed);
-    readIntoGraph(g, "./input/prim_graph.txt");
+    readIntoGraph(g, "./input/minimum_spanning_tree_graph.txt");
     prim(g, "A");
     g.print();
     return 0;
