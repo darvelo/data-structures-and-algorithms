@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include "../../../data-structures/Graph.h"
-#include "../../../data-structures/DisjointSet.h"
+#include "../../../data-structures/DisjointSets.h"
 #include "../helpers.h"
 
 using std::cout;
