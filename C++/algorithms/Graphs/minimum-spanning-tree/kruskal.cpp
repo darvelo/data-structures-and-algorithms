@@ -69,7 +69,7 @@ kruskal(GraphT& g) {
 int main() {
     bool directed = true;
     Graph<Data> g(directed);
-    readIntoGraph(g, "./input/minimum_spanning_tree_graph.txt");
+    readIntoGraph(g, "./input/spanning_tree_graph.txt");
     g.print();
 
     auto edges = kruskal(g);

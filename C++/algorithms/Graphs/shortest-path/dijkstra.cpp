@@ -12,7 +12,7 @@ static int MAX_INT = std::numeric_limits<int>::max();
 
 template <typename GraphT>
 void
-prim(GraphT& g, typename GraphT::Vertex& start) {
+dijkstra(GraphT& g, typename GraphT::Vertex& start) {
     using Vertex = typename GraphT::Vertex;
 
     g.initializeSearch();
@@ -31,8 +31,8 @@ prim(GraphT& g, typename GraphT::Vertex& start) {
             auto w = e.w;
             weight = e.weight;
 
-            if (w->distance > weight && !intree[w]) {
-                w->distance = weight;
+            if (w->distance > weight + v->distance) {
+                w->distance = weight + v->distance;
                 w->parent = v;
             }
         }
@@ -50,21 +50,21 @@ prim(GraphT& g, typename GraphT::Vertex& start) {
 
 template <typename GraphT>
 void
-prim(GraphT& g, string start) {
+dijkstra(GraphT& g, string start) {
     auto iter = g.getVertex(start);
 
     if (iter == g.end()) {
         throw CustomException("Can't find minimum spanning tree from non-existent vertex!");
     }
 
-    prim(g, *iter);
+    dijkstra(g, *iter);
 }
 
 int main() {
     bool directed = false;
     Graph<Data> g(directed);
     readIntoGraph(g, "./input/spanning_tree_graph.txt");
-    prim(g, "A");
+    dijkstra(g, "A");
     g.print();
     return 0;
 }
