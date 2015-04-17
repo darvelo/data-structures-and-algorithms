@@ -3,9 +3,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <tuple>
 #include <fstream>
 #include <regex>
 #include "../../data-structures/Graph.h"
+#include "../../data-structures/Matrix.h"
 #include "error_types.h"
 
 // Sample user-defined data
@@ -145,6 +147,41 @@ readIntoGraph(GraphT& g, std::string filename) {
     std::unordered_map<std::string, std::unordered_map<std::string,int>> relationships;
     readData(filename, relationships);
     populateGraph(g, relationships);
+}
+
+template <typename GraphT>
+std::tuple<std::unordered_map<int, typename GraphT::Vertex*>,
+           std::unordered_map<typename GraphT::Vertex*, int>,
+           Matrix<int>>
+graphToMatrix(GraphT& g) {
+    int MAX_INT = std::numeric_limits<int>::max();
+    std::unordered_map<int, typename GraphT::Vertex*> itov;
+    std::unordered_map<typename GraphT::Vertex*, int> vtoi;
+    Matrix<int> m(g.nvertices(), g.nvertices(), MAX_INT);
+
+    int count = 0;
+    // map vertices to integers and vice-versa
+    for (auto& v : g) {
+        itov[count] = &v;
+        vtoi[&v] = count;
+        ++count;
+    }
+
+    // map edges into adjacency matrix
+    for (int i = 0; i < count; ++i) {
+        auto v = itov[i];
+        for (auto& e : v->edges) {
+            int j = vtoi[e.w];
+            m[i][j] = e.weight;
+        }
+        // zero distance from a vertex to itself
+        m[i][i] = 0;
+    }
+
+    return std::tuple<std::unordered_map<int, typename GraphT::Vertex*>,
+                      std::unordered_map<typename GraphT::Vertex*, int>,
+                      Matrix<int>>
+                (std::move(itov), std::move(vtoi), std::move(m));
 }
 
 #endif
