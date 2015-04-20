@@ -94,7 +94,7 @@ private:
         while (hole * 2 <= currentSize) {
             child = hole * 2;
 
-            if (child != currentSize && array[child+1] < array[child]) {
+            if (child != currentSize && array[child + 1] < array[child]) {
                 ++child;
             }
 
