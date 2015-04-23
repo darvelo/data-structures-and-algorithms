@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <tuple>
 #include <fstream>
+#include <sstream>
 #include <regex>
 #include "../../data-structures/Graph.h"
 #include "../../data-structures/Matrix.h"
@@ -15,6 +16,23 @@ struct Data {
     Data(std::string _surname = "")
         : surname(_surname) { }
     std::string surname;
+};
+
+struct Point {
+    Point(int _x, int _y, char _type)
+        : x(_x), y(_y), type(_type) { }
+
+    bool blocked() const { return type == '^'; }
+
+    const int x;
+    const int y;
+    char type;
+
+    static std::string getNameOf(int x, int y) {
+        std::stringstream s;
+        s << "(" << x << "," << y << ")";
+        return s.str();
+    }
 };
 
 // format for lines in the inputfile:
@@ -56,7 +74,6 @@ void readData(std::string filename, std::unordered_map<std::string,std::unordere
     std::ifstream file(filename);
     std::string line;
     std::smatch match;
-    std::vector<std::string> empty;
     std::unordered_map<std::string, int> dummy;
 
     while (std::getline(file, line)) {
@@ -147,6 +164,84 @@ readIntoGraph(GraphT& g, std::string filename) {
     std::unordered_map<std::string, std::unordered_map<std::string,int>> relationships;
     readData(filename, relationships);
     populateGraph(g, relationships);
+}
+
+template <typename Data>
+void
+readMapIntoGraph(Graph<Data>& g, std::string filename, std::vector<std::vector<char>>* mapMatrix = nullptr) {
+    std::ifstream file(filename);
+    std::string line;
+    std::string::size_type width = 0;
+    std::string::size_type height = 0;
+    std::string::size_type& y = height;
+
+    // add vertices
+    while (std::getline(file, line)) {
+        if (line.empty() || line == "\n" || line[0] == '#') {
+            continue;
+        }
+
+        if (width == 0) {
+            width = line.size();
+        }
+
+        if (line.size() != width) {
+            throw CustomException("Matrix input graph must be rectangular.");
+        }
+
+        if (mapMatrix) {
+            mapMatrix->resize(width);
+            for (auto& c : *mapMatrix) {
+                // make sure we have space starting from height = 0,
+                // since height is only incremented at the end of the loop,
+                // after the coordinate position is filled.
+                c.resize(height+1);
+            }
+        }
+
+        for (std::string::size_type x = 0; x < line.size(); ++x) {
+            if (mapMatrix) (*mapMatrix)[x][y] = line[x];
+            Data* data = new Data(x, y, line[x]);
+            g.addVertex(Data::getNameOf(x, y), data);
+        }
+
+        ++height;
+    }
+
+    file.close();
+
+    std::string from;
+    std::string to;
+    Data* current = nullptr;
+    Data* adjacent = nullptr;
+
+    // add edges between unblocked territory
+    for (std::string::size_type x = 0; x < width; ++x) {
+        for (std::string::size_type y = 0; y < height; ++y) {
+            from = Data::getNameOf(x, y);
+            current = (*g.getVertex(from)).data;
+
+            if (current->blocked()) {
+                continue;
+            }
+
+            if (x < width-1) {
+                adjacent = (*g.getVertex(Data::getNameOf(x+1, y))).data;
+                if (!adjacent->blocked()) {
+                    to = Data::getNameOf(x+1, y);
+                    g.addEdge(from, to);
+                }
+            }
+
+            if (y < height-1) {
+                adjacent = (*g.getVertex(Data::getNameOf(x, y+1))).data;
+                if (!adjacent->blocked()) {
+                    to = Data::getNameOf(x, y+1);
+                    g.addEdge(from, to);
+                }
+            }
+        }
+    }
 }
 
 template <typename GraphT>
