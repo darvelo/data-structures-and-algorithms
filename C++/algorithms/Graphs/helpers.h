@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <cmath>
 #include "../../data-structures/Graph.h"
 #include "../../data-structures/Matrix.h"
 #include "error_types.h"
@@ -23,6 +24,13 @@ struct Point {
         : x(_x), y(_y), type(_type) { }
 
     bool blocked() const { return type == '^'; }
+
+    // get distance between points using Pythagorean Theorem
+    int distFrom(Point* goal) {
+        int dx = abs(goal->x - x);
+        int dy = abs(goal->y - y);
+        return sqrt(pow(dx, 2) + pow(dy, 2));
+    }
 
     const int x;
     const int y;
