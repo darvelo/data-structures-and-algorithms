@@ -176,7 +176,28 @@ readIntoGraph(GraphT& g, std::string filename) {
 
 template <typename Data>
 void
-readMapIntoGraph(Graph<Data>& g, std::string filename, std::vector<std::vector<char>>* mapMatrix = nullptr) {
+createMapEdges(Graph<Data>& g, int x1, int y1, int x2, int y2) {
+    std::string from = Data::getNameOf(x1, y1);
+    Data* current = (*g.getVertex(from)).data;
+
+    if (current->blocked()) {
+        return;
+    }
+
+    std::string to = Data::getNameOf(x2, y2);
+    Data* adjacent = (*g.getVertex(to)).data;
+
+    if (adjacent->blocked()) {
+        return;
+    }
+
+    g.addEdge(from, to);
+    g.addEdge(to, from);
+}
+
+template <typename Data>
+void
+readMapIntoGraph(Graph<Data>& g, std::string filename, bool allowDiagonals = true, std::vector<std::vector<char>>* mapMatrix = nullptr) {
     std::ifstream file(filename);
     std::string line;
     std::string::size_type width = 0;
@@ -218,34 +239,28 @@ readMapIntoGraph(Graph<Data>& g, std::string filename, std::vector<std::vector<c
 
     file.close();
 
-    std::string from;
-    std::string to;
-    Data* current = nullptr;
-    Data* adjacent = nullptr;
-
     // add edges between unblocked territory
     for (std::string::size_type x = 0; x < width; ++x) {
         for (std::string::size_type y = 0; y < height; ++y) {
-            from = Data::getNameOf(x, y);
-            current = (*g.getVertex(from)).data;
-
-            if (current->blocked()) {
-                continue;
+            // add horizontal edges
+            if (x != 0) {
+                createMapEdges(g, x, y, x-1, y);
             }
 
-            if (x < width-1) {
-                adjacent = (*g.getVertex(Data::getNameOf(x+1, y))).data;
-                if (!adjacent->blocked()) {
-                    to = Data::getNameOf(x+1, y);
-                    g.addEdge(from, to);
+            // add vertical edges
+            if (y != 0) {
+                createMapEdges(g, x, y, x, y-1);
+            }
+
+            // add diagonals
+            if (allowDiagonals && x != 0) {
+                // NW/SE edges
+                if (y != 0) {
+                    createMapEdges(g, x, y, x-1, y-1);
                 }
-            }
-
-            if (y < height-1) {
-                adjacent = (*g.getVertex(Data::getNameOf(x, y+1))).data;
-                if (!adjacent->blocked()) {
-                    to = Data::getNameOf(x, y+1);
-                    g.addEdge(from, to);
+                // NE/SW edges
+                if (y < height-1) {
+                    createMapEdges(g, x, y, x-1, y+1);
                 }
             }
         }
