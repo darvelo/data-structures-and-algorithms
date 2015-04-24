@@ -181,7 +181,7 @@ readIntoGraph(GraphT& g, std::string filename) {
 
 template <typename Data>
 void
-createMapEdges(Graph<Data>& g, int x1, int y1, int x2, int y2) {
+createMapEdges(Graph<Data>& g, int x1, int y1, int x2, int y2, bool diagonal = false, int diagonalCost = 1) {
     std::string from = Data::getNameOf(x1, y1);
     Data* current = (*g.getVertex(from)).data;
 
@@ -196,13 +196,19 @@ createMapEdges(Graph<Data>& g, int x1, int y1, int x2, int y2) {
         return;
     }
 
-    g.addEdge(from, to);
-    g.addEdge(to, from);
+    // horizontal/vertical edges cost 1
+    if (!diagonal) {
+        g.addEdge(from, to);
+        g.addEdge(to, from);
+    } else {
+        g.addEdge(from, to, diagonalCost);
+        g.addEdge(to, from, diagonalCost);
+    }
 }
 
 template <typename Data>
 void
-readMapIntoGraph(Graph<Data>& g, std::string filename, bool allowDiagonals = true, std::vector<std::vector<char>>* mapMatrix = nullptr) {
+readMapIntoGraph(Graph<Data>& g, std::string filename, bool allowDiagonals = true, int diagonalCost = 1, std::vector<std::vector<char>>* mapMatrix = nullptr) {
     std::ifstream file(filename);
     std::string line;
     std::string::size_type width = 0;
@@ -266,11 +272,11 @@ readMapIntoGraph(Graph<Data>& g, std::string filename, bool allowDiagonals = tru
             if (allowDiagonals && x != 0) {
                 // NW/SE edges
                 if (y != 0) {
-                    createMapEdges(g, x, y, x-1, y-1);
+                    createMapEdges(g, x, y, x-1, y-1, true, diagonalCost);
                 }
                 // NE/SW edges
                 if (y < height-1) {
-                    createMapEdges(g, x, y, x-1, y+1);
+                    createMapEdges(g, x, y, x-1, y+1, true, diagonalCost);
                 }
             }
         }
