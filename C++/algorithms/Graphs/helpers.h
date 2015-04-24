@@ -84,6 +84,11 @@ void readData(std::string filename, std::unordered_map<std::string,std::unordere
     std::smatch match;
     std::unordered_map<std::string, int> dummy;
 
+    if (!file.good()) {
+        std::string msg = "Unable to read file \"" + filename +  "\"!";
+        throw CustomException(msg.c_str());
+    }
+
     while (std::getline(file, line)) {
         if (line.empty() || line == "\n" || line[0] == '#') {
             continue;
@@ -203,6 +208,11 @@ readMapIntoGraph(Graph<Data>& g, std::string filename, bool allowDiagonals = tru
     std::string::size_type width = 0;
     std::string::size_type height = 0;
     std::string::size_type& y = height;
+
+    if (!file.good()) {
+        std::string msg = "Unable to read file \"" + filename +  "\"!";
+        throw CustomException(msg.c_str());
+    }
 
     // add vertices
     while (std::getline(file, line)) {
