@@ -55,7 +55,7 @@ A_star(GraphT& g, Vertex& start, Vertex& goal) {
     openset.emplace(&start, start.distance + heuristic_cost_estimate(&start, &goal));
 
     auto vertexInOpenset = [&openset] (Vertex* w) {
-        for (decltype(openset.begin()) beg = openset.begin(); beg != openset.end(); ++beg) {
+        for (auto beg = openset.begin(); beg != openset.end(); ++beg) {
             if ((*beg).v == w) return beg;
         }
 
@@ -128,8 +128,8 @@ void tracePath(Vertex goal, vector<vector<char>>& mapMatrix) {
 }
 
 void printMap(vector<vector<char>>& mapMatrix) {
-    decltype(mapMatrix.size()) width = mapMatrix.size();
-    decltype(width) height = mapMatrix[0].size();
+    auto width = mapMatrix.size();
+    auto height = mapMatrix[0].size();
 
     for (decltype(height) y = 0; y < height; ++y) {
         for (decltype(width) x = 0; x < width; ++x) {
@@ -157,7 +157,6 @@ int main(int argc, char* argv[]) {
 
     if (argc > 4) {
         if (strcmp(argv[4], "y") == 0) allowDiagonals = true;
-        if (strcmp(argv[4], "n") == 0) allowDiagonals = false;
     }
 
     if (argc > 5) {
