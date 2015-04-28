@@ -1,10 +1,9 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-/**
- * Implementation of vector
- */
-#include <algorithm>
+#include <utility> /* move, swap */
+#include <cstddef> /* size_t */
+#include "../utils.h"
 
 template <typename Object>
 class Vector {
@@ -90,7 +89,7 @@ public:
 
   Object& operator[](size_t pos) {
     if (pos >= size()) {
-      throw "Out of range!";
+      throw CustomException("Vector::operator[]: Out of range!");
     }
 
     return objects[pos];
@@ -98,7 +97,7 @@ public:
 
   const Object& operator[](size_t pos) const {
     if (pos >= size()) {
-      throw "Out of range!";
+      throw CustomException("Vector::operator[]: Out of range!");
     }
 
     return objects[pos];
@@ -106,7 +105,7 @@ public:
 
   Object & back() {
     if (size() == 0) {
-      throw "This Vector has no items!";
+      throw CustomException("Vector::back(): This Vector has no items!");
     }
 
     return objects[_size - 1];
@@ -114,7 +113,7 @@ public:
 
   const Object & back() const {
     if (size() == 0) {
-      throw "This Vector has no items!";
+      throw CustomException("Vector::back(): This Vector has no items!");
     }
 
     return objects[_size - 1];

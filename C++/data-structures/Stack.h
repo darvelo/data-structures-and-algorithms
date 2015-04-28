@@ -1,8 +1,9 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include <algorithm>
+#include <utility> /* move */
 #include "Vector.h"
+#include "../utils.h"
 
 template <typename Object>
 class Stack {
@@ -19,7 +20,7 @@ public:
 
     Object pop() {
         if (theArray.empty()) {
-            throw "The stack was empty -- cannot pop!";
+            throw CustomException("Stack::pop(): The stack was empty -- cannot pop!");
         }
 
         Object element = theArray.back();
@@ -30,7 +31,7 @@ public:
 
     Object& top() {
         if (theArray.empty()) {
-            throw "The stack was empty -- cannot get top!";
+            throw CustomException("Stack::top(): was empty -- cannot get top!");
         }
 
         return theArray.back();
@@ -38,7 +39,7 @@ public:
 
     const Object& top() const {
         if (theArray.empty()) {
-            throw "The stack was empty -- cannot get top!";
+            throw CustomException("Stack::top(): The stack was empty -- cannot get top!");
         }
 
         return theArray.back();
