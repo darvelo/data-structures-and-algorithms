@@ -31,7 +31,7 @@ public:
 
     Object& top() {
         if (theArray.empty()) {
-            throw CustomException("Stack::top(): was empty -- cannot get top!");
+            throw CustomException("Stack::top(): The stack was empty -- cannot get top!");
         }
 
         return theArray.back();
