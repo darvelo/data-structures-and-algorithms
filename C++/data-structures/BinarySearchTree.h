@@ -26,14 +26,7 @@ public:
     BinarySearchTree() { }
 
     ~BinarySearchTree() {
-        postOrderTraversal(root, [] (Node* t) {
-            delete t->left;
-            delete t->right;
-            t->left = t->right = nullptr;
-        });
-
-        delete root;
-        root = nullptr;
+        clear();
     }
 
     Node* min () const {
@@ -86,6 +79,10 @@ public:
 
     void remove (const Object& data) {
         remove(data, root);
+    }
+
+    void clear () {
+        clear(root);
     }
 
     void print (std::ostream& out = std::cout) {
@@ -145,6 +142,22 @@ private:
             t = (t->right != nullptr) ? t->right : t->left;
             delete oldNode;
         }
+    }
+
+    void clear (Node*& t) {
+        if (t != nullptr) {
+            clear(t->left);
+            clear(t->right);
+            delete t;
+            t = nullptr;
+        }
+    }
+
+    Node* clone (Node* t) const {
+        if (t == nullptr) {
+            return nullptr;
+        }
+        return new Node(t->data, clone(t->left), clone(t->right));
     }
 
     void print (Node* t, std::ostream& out = std::cout) {
