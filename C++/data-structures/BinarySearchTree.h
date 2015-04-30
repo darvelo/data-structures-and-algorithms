@@ -36,11 +36,11 @@ public:
         root = nullptr;
     }
 
-    Node* min () {
+    Node* min () const {
         min(root);
     }
 
-    Node* min (Node* min) {
+    Node* min (Node* min) const {
         if (min == nullptr) {
             return nullptr;
         }
@@ -52,11 +52,11 @@ public:
         return min;
     }
 
-    Node* max () {
+    Node* max () const {
         max(root);
     }
 
-    Node* max (Node* max) {
+    Node* max (Node* max) const {
         if (max == nullptr) {
             return nullptr;
         }
