@@ -72,6 +72,10 @@ public:
         return search(data, root);
     }
 
+    bool contains(const Object& data) const {
+        return search(data, root) != nullptr;
+    }
+
     void insert (const Object& data) {
         insert(data, root);
     }
