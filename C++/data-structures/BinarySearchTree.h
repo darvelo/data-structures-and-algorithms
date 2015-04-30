@@ -85,7 +85,7 @@ public:
     }
 
     void remove (const Object& data) {
-        remove(data, &root);
+        remove(data, root);
     }
 
     void print (std::ostream& out = std::cout) {
@@ -128,37 +128,22 @@ private:
         }
     }
 
-    void remove (const Object& data, Node** current) {
-        while (*current != nullptr && (*current)->data != data) {
-            if (isLessThan(data, (*current)->data)) {
-                current = &((*current)->left);
-            } else {
-                current = &((*current)->right);
-            }
-        }
-
-        if (*current == nullptr) {
-            // data not in tree
+    void remove (const Object& data, Node*& t) {
+        if (t == nullptr) {
             return;
-        }
-
-        // create a direct reference to the node pointer to overwrite it
-        Node*& found = *current;
-
-        if (found->left == nullptr && found->right == nullptr) {
-            // no child nodes
-            delete found;
-            found = nullptr;
-        } else if (found->left != nullptr && found->right != nullptr) {
+        } else if (isLessThan(data, t->data)) {
+            remove(data, t->left);
+        } else if (isLessThan(t->data, data)) {
+            remove(data, t->right);
+        } else if (t->left != nullptr && t->right != nullptr) {
             // two child nodes
-            Node* minimum = min(found->right);
-            found->data = minimum->data;
-            remove(minimum->data, &(found->right));
+            t->data = min(t->right)->data;
+            remove(t->data, t->right);
         } else  {
-            // one child node
-            Node* next = (found->right != nullptr) ? found->right : found->left;
-            delete found;
-            found = next;
+            // zero or one child node
+            Node* oldNode = t;
+            t = (t->right != nullptr) ? t->right : t->left;
+            delete oldNode;
         }
     }
 
