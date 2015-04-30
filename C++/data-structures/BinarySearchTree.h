@@ -24,6 +24,20 @@ private:
     };
 public:
     BinarySearchTree() { }
+    BinarySearchTree(const BinarySearchTree& rhs) : root{nullptr} {
+        *this = rhs;
+    }
+    BinarySearchTree(BinarySearchTree&& rhs) : root{nullptr} {
+        *this = std::forward<BinarySearchTree>(rhs);
+    }
+    BinarySearchTree& operator=(const BinarySearchTree& rhs) {
+        root = clone(rhs.root);
+    }
+    BinarySearchTree& operator=(BinarySearchTree&& rhs) {
+        clear();
+        root = std::move(rhs.root);
+        rhs.root = nullptr;
+    }
 
     ~BinarySearchTree() {
         clear();
