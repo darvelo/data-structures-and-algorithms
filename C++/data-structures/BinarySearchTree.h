@@ -6,16 +6,17 @@
 #define BINARY_SEARCH_TREE_H
 
 #include <iostream>
+#include <functional> /* less, function */
 
-template <typename Comparable>
+template <typename Object, typename Comparator=std::less<Object>>
 class BinarySearchTree {
 private:
     struct Node {
-        Comparable data;
+        Object data;
         Node* left = nullptr;
         Node* right = nullptr;
 
-        Node (Comparable x) : data(x) { }
+        Node (Object x) : data(x) { }
     };
 public:
     BinarySearchTree() { }
@@ -63,15 +64,15 @@ public:
         return max;
     }
 
-    Node* search (const Comparable& data) const {
+    Node* search (const Object& data) const {
         return search(data, root);
     }
 
-    void insert (const Comparable& data) {
+    void insert (const Object& data) {
         insert(data, root);
     }
 
-    void remove (const Comparable& data) {
+    void remove (const Object& data) {
         remove(data, &root);
     }
 
@@ -79,33 +80,33 @@ public:
         print(root, out);
     }
 private:
-    Node* search (const Comparable& data, Node*const& t) const {
+    Node* search (const Object& data, Node*const& t) const {
         if (t == nullptr || data == t->data) {
             return t;
         }
 
-        if (data > t->data) {
+        if (isLessThan(t->data, data)) {
             return search(data, t->right);
         } else {
             return search(data, t->left);
         }
     }
 
-    void insert (const Comparable& data, Node*& t) {
+    void insert (const Object& data, Node*& t) {
         if (t == nullptr) {
             t = new Node(data);
-        } else if (data < t->data) {
+        } else if (isLessThan(data, t->data)) {
             insert(data, t->left);
-        } else if (data > t->data) {
+        } else if (isLessThan(t->data, data)) {
             insert(data, t->right);
         } else {
             ; // duplicate data - do nothing
         }
     }
 
-    void remove (const Comparable& data, Node** current) {
+    void remove (const Object& data, Node** current) {
         while (*current != nullptr && (*current)->data != data) {
-            if (data < (*current)->data) {
+            if (isLessThan(data, (*current)->data)) {
                 current = &((*current)->left);
             } else {
                 current = &((*current)->right);
@@ -152,7 +153,7 @@ private:
         out << std::endl;
     }
 
-    void preOrderTraversal (Node*& t, auto processNode) {
+    void preOrderTraversal (Node*& t, std::function<void(Node*)> processNode) {
         if (t == nullptr) {
             return;
         }
@@ -162,7 +163,7 @@ private:
         preOrderTraversal(t->right, processNode);
     }
 
-    void inOrderTraversal (Node*& t, auto processNode) {
+    void inOrderTraversal (Node*& t, std::function<void(Node*)> processNode) {
         if (t == nullptr) {
             return;
         }
@@ -172,7 +173,7 @@ private:
         inOrderTraversal(t->right, processNode);
     }
 
-    void postOrderTraversal (Node*& t, auto processNode) {
+    void postOrderTraversal (Node*& t, std::function<void(Node*)> processNode) {
         if (t == nullptr) {
             return;
         }
@@ -181,7 +182,8 @@ private:
         postOrderTraversal(t->right, processNode);
         processNode(t);
     }
-private:
+
+    Comparator isLessThan;
     Node* root = nullptr;
 };
 
