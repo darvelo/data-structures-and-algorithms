@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <functional> /* less, function */
+#include <utility> /* move, forward */
 
 template <typename Object, typename Comparator=std::less<Object>>
 class BinarySearchTree {
@@ -16,7 +17,10 @@ private:
         Node* left = nullptr;
         Node* right = nullptr;
 
-        Node (Object x) : data(x) { }
+        Node (const Object& x, Node* _left = nullptr, Node* _right = nullptr)
+            : data(x), left(_left), right(_right) { }
+        Node (Object&& x, Node* _left = nullptr, Node* _right = nullptr)
+            : data(std::move(x)), left(_left), right(_right) { }
     };
 public:
     BinarySearchTree() { }
@@ -72,6 +76,10 @@ public:
         insert(data, root);
     }
 
+    void insert (Object&& data) {
+        insert(std::forward<Object>(data), root);
+    }
+
     void remove (const Object& data) {
         remove(data, &root);
     }
@@ -99,6 +107,18 @@ private:
             insert(data, t->left);
         } else if (isLessThan(t->data, data)) {
             insert(data, t->right);
+        } else {
+            ; // duplicate data - do nothing
+        }
+    }
+
+    void insert (Object&& data, Node*& t) {
+        if (t == nullptr) {
+            t = new Node(std::move(data));
+        } else if (isLessThan(data, t->data)) {
+            insert(std::forward<Object>(data), t->left);
+        } else if (isLessThan(t->data, data)) {
+            insert(std::forward<Object>(data), t->right);
         } else {
             ; // duplicate data - do nothing
         }
