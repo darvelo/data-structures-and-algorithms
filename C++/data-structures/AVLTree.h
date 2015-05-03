@@ -1,46 +1,43 @@
-/*
- * In this version, the shape of the tree is dependent on the order in which
- * the keys are inserted. Inserting in sorted order creates one skinny tree!
- */
-#ifndef BINARY_SEARCH_TREE_H
-#define BINARY_SEARCH_TREE_H
+#ifndef AVL_TREE_H
+#define AVL_TREE_H
 
 #include <iostream>
 #include <functional> /* less, function */
 #include <utility> /* move, forward */
+#include <algorithm> /* max */
 
 template <typename Object, typename Comparator=std::less<Object>>
-class BinarySearchTree {
+class AVLTree {
 private:
     struct Node {
         Object data;
         Node* left = nullptr;
         Node* right = nullptr;
+        int height;
 
-        Node (const Object& x, Node* _left = nullptr, Node* _right = nullptr)
-            : data(x), left(_left), right(_right) { }
-        Node (Object&& x, Node* _left = nullptr, Node* _right = nullptr)
-            : data(std::move(x)), left(_left), right(_right) { }
+        Node (const Object& x, Node* _left = nullptr, Node* _right = nullptr, int _height = 0)
+            : data(x), left(_left), right(_right), height(_height) { }
+        Node (Object&& x, Node* _left = nullptr, Node* _right = nullptr, int _height = 0)
+            : data(std::move(x)), left(_left), right(_right), height(_height) { }
     };
 public:
-    BinarySearchTree() { }
-    BinarySearchTree(const BinarySearchTree& rhs) : root{nullptr} {
+    AVLTree() { }
+    AVLTree(const AVLTree& rhs) : root{nullptr} {
         *this = rhs;
     }
-    BinarySearchTree(BinarySearchTree&& rhs) : root{nullptr} {
-        *this = std::forward<BinarySearchTree>(rhs);
+    AVLTree(AVLTree&& rhs) : root{nullptr} {
+        *this = std::forward<AVLTree>(rhs);
     }
-
-    BinarySearchTree& operator=(const BinarySearchTree& rhs) {
+    AVLTree& operator=(const AVLTree& rhs) {
         root = clone(rhs.root);
     }
-    BinarySearchTree& operator=(BinarySearchTree&& rhs) {
+    AVLTree& operator=(AVLTree&& rhs) {
         clear();
         root = std::move(rhs.root);
         rhs.root = nullptr;
     }
 
-    ~BinarySearchTree() {
+    ~AVLTree() {
         clear();
     }
 
@@ -116,6 +113,70 @@ private:
         }
     }
 
+    int height(Node* t) const {
+        return t == nullptr ? -1 : t->height;
+    }
+
+    void rotateWithLeftChild(Node*& t) {
+        Node* k = t->left;
+        t->left = k->right;
+        k->right = t;
+        t->height = 1 + std::max(height(t->left), height(t->right));
+        k->height = 1 + std::max(height(k->left), t->height);
+        t = k;
+    }
+
+    void rotateWithRightChild(Node*& t) {
+        Node* k = t->right;
+        t->right = k->left;
+        k->left = t;
+        t->height = 1 + std::max(height(t->left), height(t->right));
+        k->height = 1 + std::max(height(k->right), t->height);
+        t = k;
+    }
+
+    void doubleRotateWithLeftChild(Node*& t) {
+        rotateWithRightChild(t->left);
+        rotateWithLeftChild(t);
+    }
+
+    void doubleRotateWithRightChild(Node*& t) {
+        rotateWithLeftChild(t->right);
+        rotateWithRightChild(t);
+    }
+
+    void balance(Node*& t) {
+        if (t == nullptr) {
+            return;
+        }
+
+        // if left is higher than right
+        if (height(t->left) - height(t->right) > ALLOWED_IMBALANCE) {
+            // if the height runs higher on the outer left margins of the subtree.
+            // the `>=` allows deletions to rotate correctly when the subtree
+            // on the opposite subtree of the deletion has subtrees of equal height
+            if (height(t->left->left) >= height(t->left->right)) {
+                rotateWithLeftChild(t);
+            // if the height runs higher on the inner subtree of the left node
+            } else {
+                doubleRotateWithLeftChild(t);
+            }
+        // if right is higher than left
+        } else if (height(t->right) - height(t->left) > ALLOWED_IMBALANCE) {
+            // if the height runs higher on the outer right margins of the subtree.
+            // the `>=` allows deletions to rotate correctly when the subtree
+            // on the opposite subtree of the deletion has subtrees of equal height
+            if (height(t->right->right) >= height(t->right->left)) {
+                rotateWithRightChild(t);
+            // if the height runs higher on the inner subtree of the right node
+            } else {
+                doubleRotateWithRightChild(t);
+            }
+        }
+
+        t->height = 1 + std::max(height(t->left), height(t->right));
+    }
+
     void insert (const Object& data, Node*& t) {
         if (t == nullptr) {
             t = new Node(data);
@@ -126,6 +187,8 @@ private:
         } else {
             ; // duplicate data - do nothing
         }
+
+        balance(t);
     }
 
     void insert (Object&& data, Node*& t) {
@@ -138,6 +201,8 @@ private:
         } else {
             ; // duplicate data - do nothing
         }
+
+        balance(t);
     }
 
     void remove (const Object& data, Node*& t) {
@@ -157,6 +222,8 @@ private:
             t = (t->right != nullptr) ? t->right : t->left;
             delete oldNode;
         }
+
+        balance(t);
     }
 
     void clear (Node*& t) {
@@ -177,7 +244,7 @@ private:
 
     void print (Node* t, std::ostream& out = std::cout) {
         preOrderTraversal(t, [&out] (Node* t) {
-            out << "data: " << t->data;
+            out << "data: " << t->data << ", height = " << t->height;
 
             out << ", left: ";
             (t->left  != nullptr) ? out << t->left->data  : out << "null";
@@ -220,6 +287,7 @@ private:
         processNode(t);
     }
 
+    static const int ALLOWED_IMBALANCE = 1;
     Comparator isLessThan;
     Node* root = nullptr;
 };
