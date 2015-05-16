@@ -29,6 +29,7 @@ public:
         *this = std::forward<AVLTree>(rhs);
     }
     AVLTree& operator=(const AVLTree& rhs) {
+        clear();
         root = clone(rhs.root);
     }
     AVLTree& operator=(AVLTree&& rhs) {
