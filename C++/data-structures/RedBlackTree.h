@@ -283,6 +283,9 @@ private:
             if (sibling->left->color == BLACK && sibling->right->color == BLACK) {
                 sibling->color = RED;
             } else {
+                // parent can be black here, but only at the root,
+                // where such a case also succeeds
+
                 Node* siblingsRedChild = (sibling->left->color == RED) ? sibling->left : sibling->right;
                 greatGrandparent = grandparent;
 
