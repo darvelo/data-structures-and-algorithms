@@ -99,7 +99,7 @@ public:
 
             // check if two red children; fix if so
             if (current->left->color == RED && current->right->color == RED) {
-                handleReorient(data);
+                handleReorientForInsertion(data);
             }
         }
 
@@ -117,10 +117,54 @@ public:
             parent->right = current;
         }
 
-        handleReorient(data);
+        handleReorientForInsertion(data);
     }
 
     void remove (const Object& data) {
+        current = parent = grandparent = greatGrandparent = header;
+        header->color = RED;
+        nullNode->data = data;
+
+        while (current->data != data) {
+            greatGrandparent = grandparent; grandparent = parent; parent = current;
+            current = isLessThan(data, current->data) ? current->left : current->right;
+
+            if (current == nullNode) {
+                return;
+            }
+
+            if (current->color == BLACK) {
+                handleReorientForRemoval(data);
+            }
+        }
+
+        // node has two children
+        if (current->left != nullNode && current->right != nullNode) {
+            Node* curr = current;
+            Node* replacement = (curr->right == nullNode) ? max(curr->left) : min(curr->right);
+            Object data = replacement->data;
+            remove(replacement->data);
+            curr->data = std::move(data);
+        } else {
+            // we're on a leaf (it has at most one child)
+            Node* child = (current->right == nullNode) ? current->left : current->right;
+
+            if (current->color == BLACK) {
+                if (child->color == BLACK) {
+                    handleReorientForRemoval(data);
+                } else {
+                    child->color = BLACK;
+                }
+            }
+
+            if (parent->left == current) {
+                parent->left = child;
+            } else {
+                parent->right = child;
+            }
+
+            delete current;
+        }
     }
 
     void clear () {
@@ -194,7 +238,7 @@ private:
      * Internal routine that is called during an insertion if a node has two red children.
      * Performs flips and rotations. `item` is the item being inserted.
      */
-    void handleReorient(const Object& item) {
+    void handleReorientForInsertion(const Object& item) {
         // flip color
         current->color = RED;
         current->left->color = BLACK;
@@ -209,6 +253,50 @@ private:
             }
             current = rotate(item, greatGrandparent);
             current->color = BLACK;
+        }
+
+        header->right->color = BLACK;
+    }
+
+    /**
+     * Internal routine that is called during a removal if a node is black.
+     * Performs flips and rotations. `item` is the item being removed.
+     */
+    void handleReorientForRemoval(const Object& item) {
+        Node* sibling = (parent->left == current) ? parent->right : parent->left;
+
+        if (parent->color == BLACK && sibling->color == RED) {
+            parent->color = RED;
+            // rotate parent with sibling
+            greatGrandparent = grandparent;
+            grandparent = rotate(sibling->data, grandparent);
+            grandparent->color = BLACK;
+        }
+
+        // current is still black here
+        if (current->left->color == BLACK && current->right->color == BLACK) {
+            parent->color = BLACK;
+            current->color = RED;
+
+            if (sibling->left->color == BLACK && sibling->right->color == BLACK) {
+                sibling->color = RED;
+            } else {
+                Node* siblingsRedChild = (sibling->left->color == RED) ? sibling->left : sibling->right;
+                greatGrandparent = grandparent;
+
+                if (isLessThan(siblingsRedChild->data, sibling->data) != isLessThan(siblingsRedChild->data, parent->data)) {
+                    // double rotation
+                    rotate(siblingsRedChild->data, parent);
+                    grandparent = rotate(siblingsRedChild->data, grandparent);
+                } else {
+                    // single rotation
+                    sibling->color = RED;
+                    siblingsRedChild->color = BLACK;
+                    grandparent = rotate(sibling->data, grandparent);
+                }
+            }
+
+            nullNode->color = BLACK;
         }
 
         header->right->color = BLACK;
