@@ -91,6 +91,7 @@ public:
 
     void insert (const Object& data) {
         current = parent = grandparent = header;
+        header->color = BLACK;
         nullNode->data = data;
 
         while (current->data != data) {
@@ -121,7 +122,7 @@ public:
     }
 
     void remove (const Object& data) {
-        current = parent = grandparent = greatGrandparent = header;
+        current = parent = grandparent = header;
         header->color = RED;
         nullNode->data = data;
 
@@ -267,10 +268,10 @@ private:
 
         if (parent->color == BLACK && sibling->color == RED) {
             parent->color = RED;
+            sibling->color = BLACK;
             // rotate parent with sibling
             greatGrandparent = grandparent;
             grandparent = rotate(sibling->data, grandparent);
-            grandparent->color = BLACK;
             sibling = (parent->left == current) ? parent->right : parent->left;
         }
 
