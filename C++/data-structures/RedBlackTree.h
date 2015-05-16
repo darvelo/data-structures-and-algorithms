@@ -275,35 +275,37 @@ private:
             sibling = (parent->left == current) ? parent->right : parent->left;
         }
 
-        // current is still black here
+        // current is still black here.
+        // fall through to a child node if current has a red child, and
+        // if we're lucky we reach the red one. if not, the if statement above holds,
+        // and this if statement takes control afterwards.
         if (current->left->color == BLACK && current->right->color == BLACK) {
+            // parent is inductively assumed to be red. parent can be black here,
+            // but only at the root (since root is always repainted black),
+            // where such a case also succeeds.
+
             parent->color = BLACK;
             current->color = RED;
 
             if (sibling->left->color == BLACK && sibling->right->color == BLACK) {
                 sibling->color = RED;
             } else {
-                // parent can be black here, but only at the root,
-                // where such a case also succeeds
-
                 Node* siblingsRedChild = (sibling->left->color == RED) ? sibling->left : sibling->right;
                 greatGrandparent = grandparent;
 
                 if (isLessThan(siblingsRedChild->data, sibling->data) != isLessThan(siblingsRedChild->data, parent->data)) {
-                    // double rotation
+                    // double rotation of sibling's red child
                     rotate(siblingsRedChild->data, parent);
                     grandparent = rotate(siblingsRedChild->data, grandparent);
                 } else {
-                    // single rotation
+                    // single rotation of sibling
                     sibling->color = RED;
                     siblingsRedChild->color = BLACK;
                     grandparent = rotate(sibling->data, grandparent);
                 }
             }
-
             nullNode->color = BLACK;
         }
-
         header->right->color = BLACK;
     }
 
