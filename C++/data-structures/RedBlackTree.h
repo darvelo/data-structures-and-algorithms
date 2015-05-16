@@ -271,6 +271,7 @@ private:
             greatGrandparent = grandparent;
             grandparent = rotate(sibling->data, grandparent);
             grandparent->color = BLACK;
+            sibling = (parent->left == current) ? parent->right : parent->left;
         }
 
         // current is still black here
