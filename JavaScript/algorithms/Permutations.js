@@ -46,7 +46,6 @@ console.log();
 
 function* permuteGenerator(array) {
     var n = array.length;
-    var direction = -1;
     var bound = -1;
     var j, p, permutations;
 
