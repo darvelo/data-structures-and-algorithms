@@ -11,31 +11,22 @@ function permute(array) {
         return [array];
     }
 
-    var n = array.length;
     var permutations = [];
     var p = permute(array.slice(0, -1));
     var plen = p.length;
-
-    var direction = -1;
-    var j = n-1;
-    var bound;
+    var n = array.length;
+    var bound = -1;
+    var j;
 
     for (var i = 0; i < plen; ++i) {
-        if (direction === -1) {
-            p[i].push(array[n-1]);
-            bound = -1;
-        } else {
-            p[i].unshift(array[n-1]);
-            bound = n;
-        }
-
+        j = n-1;
+        p[i].push(array[n-1]);
         permutations.push(p[i].slice());
-        while (j+direction !== bound) {
-            swap(p[i], j, j+direction);
+        while (j-1 !== bound) {
+            swap(p[i], j, j-1);
             permutations.push(p[i].slice());
-            j += direction;
+            j -= 1;
         }
-        direction *= -1;
     }
 
     return permutations;
@@ -54,35 +45,27 @@ console.log();
  *****************************/
 
 function* permuteGenerator(array) {
-    var permutations;
-    if (array.length < 2) {
+    var n = array.length;
+    var direction = -1;
+    var bound = -1;
+    var j, p, permutations;
+
+    if (n < 2) {
         yield array;
         permutations = [];
     } else {
         permutations = permute(array.slice(0, -1));
     }
 
-    var n = array.length;
-    var direction = -1;
-    var j = n-1;
-    var bound;
-
-    for (var p of permutations) {
-        if (direction === -1) {
-            p.push(array[n-1]);
-            bound = -1;
-        } else {
-            p.unshift(array[n-1]);
-            bound = n;
-        }
-
+    for (p of permutations) {
+        j = n-1;
+        p.push(array[n-1]);
         yield p.slice();
-        while (j+direction !== bound) {
-            swap(p, j, j+direction);
+        while (j-1 !== bound) {
+            swap(p, j, j-1);
             yield p.slice();
-            j += direction;
+            j -= 1;
         }
-        direction *= -1;
     }
 }
 
